@@ -42,6 +42,8 @@ int KruskalAlgo(int nodes) {
 			Union(u  ,v) ;
 			cnt++ ;
 		}
+		if(cnt == nodes - 1)
+			break;
 	}
 	return cost ;
 }
