@@ -114,6 +114,23 @@ vector<string> linetostr(string str){
 #define MAX -1000000007
 #define MIN 1000000007
 
+//int dx[] = {0,0,-1,1,-1,-1,1,1,0};
+//int dy[] = {1,-1,0,0,-1,1,-1,1,0};
+
+// A structure containing the edge node and the weight.
+struct node{
+    ll x , cost ;
+    // constructor : when declaring a node also can initialize..
+    node(ll _x , ll _cost) {
+        x = _x ;
+        cost = _cost ;
+    }
+    // operator overloading..
+    bool operator < (const node& p) const {
+        return cost > p.cost ;
+    }
+};
+
 //Code starts from here......
 
 int main()
@@ -123,3 +140,4 @@ int main()
 
     return 0;
 }
+// g++ -std=c++11 Codework.cpp && ./a.out
