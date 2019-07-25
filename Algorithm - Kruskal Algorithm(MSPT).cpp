@@ -64,3 +64,5 @@ int main() {
 	}
 	return 0 ;
 }
+// Note : For the 2nd minimum spanning tree we fisrt have to find 1st  MST and a vis array to mark the edges which are used in making  
+// these MST the we simply ignore each time 1 edge and try to make spanning tree and rest minimum of them is the answer..
