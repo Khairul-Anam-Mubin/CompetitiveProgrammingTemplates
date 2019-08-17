@@ -110,9 +110,12 @@ vector<string> linetostr(string str){
     return v;
 }
 
-#define MOD 1000000007
-#define MAX -1000000007
-#define MIN 1000000007
+#define MOD 1e9+7 
+#define INF 2147483647
+#define IINF 9223372036854775807
+#define WHITE 0 
+#define GRAY 1
+#define BLACK 2
 
 //int dx[] = {0,0,-1,1,-1,-1,1,1,0};
 //int dy[] = {1,-1,0,0,-1,1,-1,1,0};
