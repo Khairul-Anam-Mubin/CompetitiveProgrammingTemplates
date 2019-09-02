@@ -40,3 +40,14 @@ int main() {
 	}
 	return  0 ;
 }
+// parenting..
+int ok[100010] ;
+    int pos = 0 ;
+    for(int i = 0 ; i < vec.size() ; i++) {
+        int x = vec[i] ;
+        ok[x] = pos ;
+        pos = x ;
+    }
+    for(int i = 1 ; i <= n ; i++) {
+        cout << ok[i] << "\n" ;
+    }
