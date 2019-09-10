@@ -6,6 +6,7 @@
 #define Mxe(v)   *max_element(v.begin(),v.end())
 #define Mne(v)   *min_element(v.begin(),v.end())
 #define Fill0(a) memset(a,0,sizeof(a))
+#define precision(a) cout << fixed << setprecision(a)
 #define Fin      freopen("input.txt","r",stdin)
 #define Fout     freopen("output.txt","w",stdout)
 
@@ -36,6 +37,9 @@ template <typename T> T BigMod (T b,T p,T m){
         return ((s%m)*(s%m))%m;
     }
     return ((b%m)*(BigMod(b,p-1,m)%m))%m;
+}
+template <typename T> T ModInv (T b,T m) {
+    return BigMod(b,m-2,m);
 }
 template <typename T> T gcd(T a,T b){
     if(a < 0)return gcd(-a,b);
