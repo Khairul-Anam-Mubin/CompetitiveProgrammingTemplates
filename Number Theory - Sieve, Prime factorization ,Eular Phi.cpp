@@ -44,3 +44,20 @@ int sumofcoprimesN(int n){
     int ans = (x * n) / 2 ;
     return ans;
 }
+void FactorialFactorisation(ll n) {
+    dp[1] = 0 ;
+    for(int i = 2 ; i <= mx - 9 ; i++) {
+        dp[i] = dp[i - 1] ;
+        ll x = i ;
+        for(ll j = 0 ; j < prime.size() && prime[j] * prime[j] <= x ; j++) {
+            if(x % prime[j] == 0) {
+                while(x % prime[j] == 0) {
+                    x /= prime[j] ;
+                    dp[i]++ ;
+                }
+            }
+        }
+        if(x != 1)
+            dp[i]++ ;
+    }
+}
