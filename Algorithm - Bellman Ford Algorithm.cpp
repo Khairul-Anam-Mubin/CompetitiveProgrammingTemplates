@@ -1,3 +1,17 @@
+// The algorithm..
+void BellmanFord(int nodes) {
+	for(int i = 0 ; i < 1010 ; i++)
+		cost[i] = INF ;
+	cost[0] = 0 ;
+		for(int u = 0 ; u < nodes ; u++) {
+			for(int k = 0 ; k < G[u].size() ; k++) {
+				int v = G[u][k].first ;
+				int wv = G[u][k].second ;
+				cost[v] = min(cost[v] , cost[u] + wv) ;
+			}
+		}
+}
+
 // Algorithm
 // Bellman Ford Algorithm
 // Uva 558 - Wormholes
