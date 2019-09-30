@@ -61,3 +61,22 @@ void FactorialFactorisation(ll n) {
             dp[i]++ ;
     }
 }
+// leading zero..
+
+int main() {
+    int tc ;
+    scanf("%d",&tc) ;
+    while(tc--) {
+        ll n , k ;
+        scanf("%lld%lld",&n,&k) ;
+        ll lead , trail ;
+        trail = BigMod(n , k , 1000LL) ;
+        // leading zeros..
+        double x = log10(n) * k ;
+        double t = x - (int) x ;
+        double p = pow(10 , t) ;
+        lead = p * 100 ;
+        printf("%03lld...%03lld\n",lead , trail) ;
+    }
+    return 0 ;
+}
