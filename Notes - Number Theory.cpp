@@ -25,4 +25,22 @@
 
     //logB(x)=logC(x) / logC(B)
 
-6 : 
+6 : Trailing zeros in N! in decimal number system ,
+    Let , a is frequency of 2 in N! prime factorisation and b is frequency of 5 in N! prime factorisation..
+    Then ,
+    
+    // Number of Trailing zeros = min(a , b) ;
+
+7 : Trailing zeros in N! in different base system :
+    
+    We find number of trailing zero using the following steps:
+        Factorize the base B
+        If B = pa11 × pa22…× pakk, then find out occurance of xi=factorialPrimePower(pi).
+        But we can’t use xi directly. In order to create B we will need to combine each pi into paii. So we divide each xi by ai.
+            Number of trailing zero is MIN(x1,x2,…,xk).
+    
+ 8 : Leading Numbers :
+    We need to execute the following steps to find the first K leading digits of a number x ( in our problem x=N! ):
+        Find the log value of the number whose leading digits we are seeking. y=log10(x).
+        Decompose y into two parts. Integer part p and fraction part q.
+        The answer is ⌊10q×10K−1⌋.
