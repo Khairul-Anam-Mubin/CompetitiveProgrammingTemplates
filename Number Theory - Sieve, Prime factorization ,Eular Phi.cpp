@@ -157,8 +157,8 @@ void FactorialFactorisation(ll n) {
             dp[i]++ ;
     }
 }
-// leading zero..
 
+// leading zero..
 int main() {
     int tc ;
     scanf("%d",&tc) ;
@@ -167,12 +167,37 @@ int main() {
         scanf("%lld%lld",&n,&k) ;
         ll lead , trail ;
         trail = BigMod(n , k , 1000LL) ;
+        
         // leading zeros..
         double x = log10(n) * k ;
         double t = x - (int) x ;
         double p = pow(10 , t) ;
         lead = p * 100 ;
+        
         printf("%03lld...%03lld\n",lead , trail) ;
     }
     return 0 ;
+}
+// Number of digits in a given number N..
+int numberDigit ( int n ) {
+    int Answer = log10(n) + 1 + eps; // This is right.
+    return Answer;
+}
+// Number of digits in N! in decimal base..
+int factorialDigit ( int n ) {
+    double x = 0;
+    for ( int i = 1; i <= n; i++ ) {
+        x += log10 ( i );
+    }
+    int res = x + 1 + eps;
+    return res;
+}
+// Number of digits in N! in any base..
+int factorialDigitExtended ( int n, int base ) {
+    double x = 0;
+    for ( int i = 1; i <= n; i++ ) {
+        x += log10 ( i ) / log10(base); // Base Conversion
+    }
+    int res = x + 1 + eps;
+    return res;
 }
