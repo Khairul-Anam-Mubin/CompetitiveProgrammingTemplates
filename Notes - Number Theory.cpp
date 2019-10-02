@@ -21,4 +21,8 @@
   
     // SOD(N) = (P1^0 + P1^1 + p1^2 + ... + P1^a1) * (P2^0 + P2^1 + P2^2 + ... + P2^a2) * (Pk^0 + Pk^1 + ... + Pk^ak)
 
-5 : 
+5 : Logarithm base calculation :
+
+    //logB(x)=logC(x) / logC(B)
+
+6 : 
