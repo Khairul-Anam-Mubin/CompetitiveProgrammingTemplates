@@ -21,30 +21,8 @@ void sieve(){
             prime.pb(i);
 }
 
-// returns the number of co-prime of a number
-int phi(int n){
-    //Assigning n is as it's co-prime
-    int coprime = n ;
-    int sz = prime.size();
-    
-    //This is the prime factorization part
-    for(int  i = 0 ; i < sz && Sqr(prime[i]) <= n ; i++){
-        if(n % prime[i] == 0){
-            while(n % prime[i] == 0)
-                n /= prime[i];
-            coprime -= (coprime / prime[i]);
-        }
-    }
-    if( n > 1)
-        coprime -= (coprime / n);
-    return coprime;
-}
-int sumofcoprimesN(int n){
-    int x = phi(n);
-    int ans = (x * n) / 2 ;
-    return ans;
-}
 // returning sum of divisors of N
+// complexity of optimized prime factorization..
 int SOD( int n ) {
     int res = 1;
     int sqrtn = sqrt ( n );
@@ -68,6 +46,7 @@ int SOD( int n ) {
 }
 
 // returning number of divisors of N
+// Complexity of oprimized prime factorization
 int NOD ( int n ) {
     int sqrtn = sqrt ( n );
     int res = 1;
@@ -87,6 +66,43 @@ int NOD ( int n ) {
         res *= 2; // Remaining prime has power p^1. So multiply with 2/
     }
     return res;
+}
+
+// Sum of Number of divisors in range 1 to N .
+// Complexity O(sqrt(N))
+int SNOD( int n ) {
+    int res = 0;
+    int u = sqrt(n);
+    for ( int i = 1; i <= u; i++ ) {
+        res += ( n / i ) - i; //Step 1
+    }
+    res *= 2; //Step 2
+    res += u; //Step 3
+    return res;
+}
+
+// returns the number of co-prime of a number
+int phi(int n){
+    //Assigning n is as it's co-prime
+    int coprime = n ;
+    int sz = prime.size();
+    
+    //This is the prime factorization part
+    for(int  i = 0 ; i < sz && Sqr(prime[i]) <= n ; i++){
+        if(n % prime[i] == 0){
+            while(n % prime[i] == 0)
+                n /= prime[i];
+            coprime -= (coprime / prime[i]);
+        }
+    }
+    if( n > 1)
+        coprime -= (coprime / n);
+    return coprime;
+}
+int sumofcoprimesN(int n){
+    int x = phi(n);
+    int ans = (x * n) / 2 ;
+    return ans;
 }
 
 void FactorialFactorisation(ll n) {
