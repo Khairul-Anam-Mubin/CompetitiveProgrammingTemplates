@@ -138,25 +138,6 @@ int main () {
  return 0;
 }
 ****//
-    
-    
-void FactorialFactorisation(ll n) {
-    dp[1] = 0 ;
-    for(int i = 2 ; i <= mx - 9 ; i++) {
-        dp[i] = dp[i - 1] ;
-        ll x = i ;
-        for(ll j = 0 ; j < prime.size() && prime[j] * prime[j] <= x ; j++) {
-            if(x % prime[j] == 0) {
-                while(x % prime[j] == 0) {
-                    x /= prime[j] ;
-                    dp[i]++ ;
-                }
-            }
-        }
-        if(x != 1)
-            dp[i]++ ;
-    }
-}
 
 // leading zero..
 int main() {
@@ -200,4 +181,18 @@ int factorialDigitExtended ( int n, int base ) {
     }
     int res = x + 1 + eps;
     return res;
+}
+
+// factorial prime factorization...
+void factFactorize ( int n ) {
+    for ( int i = 0; i < prime.size() && prime[i] <= n; i++ ) {
+        int x = n;
+        int freq = 0;
+ 
+        while ( x / prime[i] ) {
+            freq += x / prime[i];
+            x = x / prime[i];
+        }
+        printf ( "%d^%d\n", prime[i], freq );
+    }
 }
