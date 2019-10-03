@@ -53,3 +53,12 @@
 10 : Euler Phi Divisor Sum Theorem 
     Theorem: 
         For a given integer N, the sum of Euler Phi of each of the divisors of N equals to N, i.e, N = ∑d | N ϕ(d)
+
+            
+11 : Eulers Totient Function (Eulers Phi): 
+        Given an integer N, how many numbers less than or equal N are there such that they are coprime to N? 
+            A number X is coprime to N if gcd(X,N) = 1.
+               
+            // ϕ(n) = n × ((p1 − 1) / p1) × ((p2 − 1) / p2) … × ((pk − 1) / pk)
+                
+12 :                 
