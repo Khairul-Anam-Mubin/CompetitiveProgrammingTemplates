@@ -44,3 +44,12 @@
         Find the log value of the number whose leading digits we are seeking. y=log10(x).
         Decompose y into two parts. Integer part p and fraction part q.
         The answer is ⌊10q×10K−1⌋.
+
+9 : Euler Phi Extension Theorem
+    Theorem: 
+    
+        Given a number N, let d be a divisor of N. Then the number of pairs a,N, where 1≤a≤N and gcd(a,N)=d, is ϕ(N / d).
+
+10 : Euler Phi Divisor Sum Theorem 
+    Theorem: 
+        For a given integer N, the sum of Euler Phi of each of the divisors of N equals to N, i.e, N = ∑d | N ϕ(d)
