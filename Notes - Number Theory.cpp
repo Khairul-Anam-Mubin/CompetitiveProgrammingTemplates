@@ -68,4 +68,13 @@
         …
         x ≡ an(mod mn)
 
- 13 : 
+ 13 : GCD Sum Function – g(n)
+     Given a positive integer N, find the value of g(N), where
+            g(n) = gcd(1,n) + gcd(2,n) + gcd(3,n) +⋯+ gcd(n,n) =  i=1 to n ∑ gcd(i,n)
+            
+            // there is a direct formula for calculating the value of g(n).
+
+                    If the prime factorization of n is p1^a1 × p2^a2 × … *pk^ak, then
+                        g(n) = i=0 to k ∏ ((ai + 1)pi^ai) – (ai * pi^(ai−1))
+   
+  14 : 
