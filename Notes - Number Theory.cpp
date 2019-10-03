@@ -3,6 +3,8 @@
 
     // gcd((n^a) − 1, (n^b) − 1) = (n^gcd(a,b)) − 1
 
+    // If gcd(x,n)=1, then gcd(n−x,n)=1
+
 2 : GCD and LCM relations , It is based on the formula that , 
   
     // LCM(A , B) × GCD( A , B) = A × B
@@ -77,4 +79,12 @@
                     If the prime factorization of n is p1^a1 × p2^a2 × … *pk^ak, then
                         g(n) = i=0 to k ∏ ((ai + 1)pi^ai) – (ai * pi^(ai−1))
    
-  14 : 
+  14 : Sum of Co-prime Numbers of an Integer
+        Problem
+        Given a number N, find the sum of all numbers less than or equal to N that are co-prime with N.
+        Let us define a function f(n), which gives us sum of all numbers less than or equal to n that are co-prime to n. 
+            Then we can calculate the value of f(n) with the following formula:
+
+                //  f(n)= (phi(n) * n) / 2    
+        
+
