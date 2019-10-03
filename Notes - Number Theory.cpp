@@ -61,4 +61,11 @@
                
             // ϕ(n) = n × ((p1 − 1) / p1) × ((p2 − 1) / p2) … × ((pk − 1) / pk)
                 
-12 :                 
+12 : Given two sequences of numbers A=[a1,a2,…,an] and M=[m1,m2,…,mn], find the smallest solution to the following linear congruence equations if it exists:
+
+        x ≡ a1(mod m1)
+        x ≡ a2(mod m2)
+        …
+        x ≡ an(mod mn)
+
+ 13 : 
