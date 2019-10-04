@@ -99,10 +99,34 @@ int phi(int n){
         coprime -= (coprime / n);
     return coprime;
 }
+// sum of coprimes of n
 int sumofcoprimesN(int n){
     int x = phi(n);
     int ans = (x * n) / 2 ;
     return ans;
+}
+
+// GCD Sum Function – g(n)
+     //Given a positive integer N, find the value of g(N), where
+     // g(n) = gcd(1,n) + gcd(2,n) + gcd(3,n) +⋯+ gcd(n,n) =  i=1 to n ∑ gcd(i,n)
+ll GcdSum(ll x) {
+    ll sq = sqrt(x) ;
+    ll ans = 1LL ; 
+    for(ll i = 0 ; i < prime.size() && prime[i] <= sq ; i++) {
+        if(x % prime[i] == 0) {
+            ll p = 0LL ;
+            while(x % prime[i] == 0) {
+                x /= prime[i] ;
+                p++ ;
+            }
+            sq = sqrt(x) ;
+            ans *= (((p + 1LL) * Pow(prime[i] , p)) - (p * Pow(prime[i] , p - 1LL))) ; 
+        }
+    }
+    if(x != 1) {
+        ans *= ((2 * x) - 1) ; 
+    }
+    return ans ;
 }
 
 // Linear Diophantine Equation
