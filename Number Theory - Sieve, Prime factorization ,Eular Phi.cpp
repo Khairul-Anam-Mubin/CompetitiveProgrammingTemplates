@@ -81,6 +81,24 @@ int SNOD( int n ) {
     return res;
 }
 
+// Pre calculation sieve method..
+// complexity of sieve..
+#define mx 50000
+int phi[mx + 10] ;
+void PreCalPhi() {
+    phi[1] = 1 ;
+    for(int i = 2 ; i <= mx ; i++) {
+        if(phi[i] == 0) {
+            phi[i] = i - 1 ;
+            for(int j = i + i ; j <= mx ; j += i) {
+                if(phi[j] == 0) 
+                    phi[j] = j ;
+                phi[j] = phi[j] - (phi[j] / i) ;
+            }
+        }
+    }
+}
+
 // returns the number of co-prime of a number
 int phi(int n){
     //Assigning n is as it's co-prime
