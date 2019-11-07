@@ -62,7 +62,12 @@ Here we discuss two problems at once.
     In the first variation of the problem we want to count the number of appearances of each prefix s[0…i] in the same string. 
     In the second variation of the problem another string t is given and we want to count the number of appearances of each prefix s[0…i] in t.
 
-vector<int> ans(n + 1);
+Let us compute the prefix function for s. 
+Using the last value of it we define the value k=n−π[n−1].
+We will show, that if k divides n, then k will be the answer, 
+otherwise there doesn't exists an effective compression and the answer is n.
+
+ vector<int> ans(n + 1);
 for (int i = 0; i < n; i++)
     ans[pi[i]]++;
 for (int i = n-1; i > 0; i--)
