@@ -57,65 +57,15 @@ int main() {
     return 0 ;
 }
 
-// Freq counting....
-// 1255 - Substring Frequency
-// Light OJ
-#include <bits/stdc++.h>
+Here we discuss two problems at once. 
+    Given a string s of length n. 
+    In the first variation of the problem we want to count the number of appearances of each prefix s[0…i] in the same string. 
+    In the second variation of the problem another string t is given and we want to count the number of appearances of each prefix s[0…i] in t.
 
-using namespace std ;
-
-char pattern[1000001] , text[1000001] ;
-int pfix[1000001] ;
-void BuildPrefixArray() {
-    int len = strlen(pattern) ;
-    pfix[0] = 0 ;
-    for(int i = 1 , j = 0 ; i < len ; ) {
-        if(pattern[i] == pattern[j]) {
-            pfix[i] = j + 1 ;
-            i++ ;
-            j++ ;
-        }
-        else {
-            if(j == 0) {
-                pfix[i] = 0 ;
-                i++ ;
-            }
-            else {
-                j = pfix[j - 1] ;
-            }
-        }
-    } 
-}
-int KMP() {
-    BuildPrefixArray() ;
-    int len1 = strlen(text) ;
-    int len2 = strlen(pattern) ;
-    int cnt = 0 ;
-    for(int i = 0 , j = 0 ; i < len1 && j < len2 ; ) {
-        if(text[i] == pattern[j]) {
-            i++ ;
-            j++ ;
-        }
-        else {
-            if(j == 0) 
-                i++ ;
-            else
-                j = pfix[j - 1] ;
-        }
-        if(j == len2) {
-            cnt++ ;
-            j = pfix[j - 1] ;
-        }
-    }
-    return cnt ;
-}
-int main() {
-    int tc , test = 0 ;
-    scanf("%d" ,&tc) ;
-    while(tc--) {
-        scanf("%s%s" ,text , pattern) ;
-        int ans = KMP() ;
-        printf("Case %d: %d\n" ,++test , ans) ; 
-    }
-    return 0 ;
-}
+vector<int> ans(n + 1);
+for (int i = 0; i < n; i++)
+    ans[pi[i]]++;
+for (int i = n-1; i > 0; i--)
+    ans[pi[i-1]] += ans[i];
+for (int i = 0; i <= n; i++)
+    ans[i]++;
