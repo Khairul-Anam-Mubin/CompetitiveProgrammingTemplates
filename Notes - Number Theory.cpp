@@ -87,4 +87,15 @@
 
                 //  f(n)= (phi(n) * n) / 2    
         
-
+Eulers Phi Properties..
+    
+    1. If p is a prime number, then gcd(p,q)=1 for all 1≤q<p. Therefore we have:
+    ϕ(p)=p−1.
+    2. If p is a prime number and k≥1, then there are exactly pk/p numbers between 1 and pk that are divisible by p. Which gives us:
+    ϕ(p^k)=p^k−p^k−1.
+    3. If a and b are relatively prime, then:
+        ϕ(ab)=ϕ(a)⋅ϕ(b).
+    4. In general, for not coprime a and b, the equation
+            ϕ(ab)=ϕ(a)⋅ϕ(b)⋅dϕ(d)
+            with d=gcd(a,b) holds.
+    5. 
