@@ -99,3 +99,18 @@ Eulers Phi Properties..
             ϕ(ab)=ϕ(a)⋅ϕ(b)⋅dϕ(d)
             with d=gcd(a,b) holds.
     5. 
+
+  Fibonacci properties...
+        
+     1 . Cassini's identity:
+            (Fn−1)*(Fn+1) − F2n= (−1)^n
+     2 .  The "addition" rule:
+            Fn+k=(Fk * Fn+1) + (Fk−1 * Fn)
+     3 . Applying the previous identity to the case k=n, we get:
+            F2n= Fn * (Fn+1 + Fn−1)
+     4 . From this we can prove by induction that for any positive integer k, Fnk is multiple of Fn.
+     5 . The inverse is also true: if Fm is multiple of Fn, then m is multiple of n
+     6 . GCD identity:
+            GCD(Fm,Fn) = FGCD(m,n)
+       
+  
