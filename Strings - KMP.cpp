@@ -1,7 +1,6 @@
 // Complexity O(n + m)
 
 #include <bits/stdc++.h>
-
 using namespace std ;
 
 // Building Prefix array
@@ -10,14 +9,11 @@ vector <int> BuildPrefixArray(string pattern) {
     pfix[0] = 0 ;
     for(int i = 1 ,j = 0 ; i < pattern.length() ; ) {
         if(pattern[i] == pattern[j]) {
-            pfix[i] = j + 1 ;
-            i++ ;
-            j++ ;
+            pfix[i++] = ++j ;
         }
         else {
             if(j == 0) {
-                pfix[i] = 0 ;
-                i++ ;
+                pfix[i++] = 0 ;
             }
             else {
                 j = pfix[j - 1] ;
