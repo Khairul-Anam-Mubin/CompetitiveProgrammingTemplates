@@ -197,7 +197,6 @@ int main () {
  return 0;
 }
 
-
 // leading numbers ..
 int main() {
     int tc ;
@@ -373,6 +372,7 @@ vector<bool> segmented(ll a , ll b)
 }
 
 // The above code returns Fn and Fn+1 as a pair..
+//where Fn and Fn+1 is nth and nth + 1 fibonacci number respectively
 pair<int, int> fib (int n) {
     if (n == 0)
         return {0, 1};
