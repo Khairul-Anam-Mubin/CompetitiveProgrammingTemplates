@@ -1,6 +1,6 @@
 /*********************************Segment Tree**************************************/
 
-/*...........................Range Sum Query Online(Update Single)............................*/
+/*...........................Range Sum Query(Update Single)............................*/
 /* Given an array of length N , and Query the sum in range left , right..Array can be update in a particular 
 position in each query.. */
 
@@ -37,14 +37,14 @@ void Update(int cur , int left , int right , int pos , int val) {
     return ;
 }
 // Query the sum in O(logN)
-int SumQuery(int cur , int left ,int right , int i ,int j) {
-    if(i > right || j < left)
+int SumQuery(int cur , int left ,int right , int l ,int r) {
+    if(l > right || r < left)
         return 0 ;
-    if(left >= i && right <= j)
+    if(left >= l && right <= r)
         return segtree[cur] ;
     int mid = (left + right) / 2 ;
-    int q1 = SumQuery(cur * 2 , left , mid , i , j) ;
-    int q2 = SumQuery(cur * 2 + 1 , mid + 1 , right , i , j) ;
+    int q1 = SumQuery(cur * 2 , left , mid , l , r) ;
+    int q2 = SumQuery(cur * 2 + 1 , mid + 1 , right , l , r) ;
     return q1 + q2 ;
 }
 int main() {
@@ -111,14 +111,14 @@ void Update(int cur ,int left , int right ,int pos , int val) {
     // If max query we just have to change the min to max..
     return ;
 }
-int MinQuery(int cur ,int left ,int right ,int i , int j) {
-    if(i > right || j < left)
+int MinQuery(int cur ,int left ,int right ,int l , int r) {
+    if(l > right || r < left)
         return INF ; // if out of bound returning INF , if max query return -INF..
-    if(left >= i && right <= j)
+    if(left >= l && right <= r)
         return segtree[cur] ;
     int mid = (left + right) / 2 ;
-    int q1 = MinQuery(cur * 2 , left , mid , i , j) ;
-    int q2 = MinQuery(cur * 2 + 1 , mid + 1 ,right , i , j) ;
+    int q1 = MinQuery(cur * 2 , left , mid , l , r) ;
+    int q2 = MinQuery(cur * 2 + 1 , mid + 1 ,right , l , r) ;
     return min(q1 , q2) ; // If max query use max instead of min..
 }
 int main() {
