@@ -72,7 +72,7 @@ int main() {
     return 0 ;
 }
 
-/*...........................Range Max-Min Query Online(Update Single)............................*/
+/*...........................Range Max-Min Query(Update Single)............................*/
 
 /* Given an array of length N , and Query the Min or Max in range left to right..Array can be update in a particular 
 position in each query.. */
