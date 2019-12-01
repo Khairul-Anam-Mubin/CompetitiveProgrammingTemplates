@@ -114,6 +114,11 @@ vector<string> linetostr(string str){
     return v;
 }
 
+void fasrerIO() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0); 
+    cout.tie(0) ;
+}
 #define MOD 1e9+7 
 #define INF 2147483647
 #define IINF 9223372036854775807
