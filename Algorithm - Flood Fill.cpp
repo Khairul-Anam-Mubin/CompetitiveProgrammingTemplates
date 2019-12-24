@@ -1,18 +1,17 @@
-// Flood Fill Algorithm
-// Finding connected componnents using dfs
+/*********************************Flood Fill**************************************/
+
+/*...........................Finding connected Components............................*/
 // Uva : Oil deposits
 #include <bits/stdc++.h>
 using namespace std;
 int n , m ;
 char grid[110][110];
-
 int visited[110][110]; // visited array
 // Direction array
 int row[] = {0,0,-1,1,-1,-1,1,1};
 int col[] = {1,-1,0,0,-1,1,-1,1};
 // initializing all grid as unvisited
-void filll()
-{
+void filll() {
     for(int i  = 0 ; i <= n+1 ; i++){
         for(int j = 0 ; j <= m+1 ; j++){
             visited[i][j] = 0;
@@ -20,8 +19,7 @@ void filll()
     }
 }
 // starting dfs
-void dfs(int x, int y)
-{
+void dfs(int x, int y) {
     visited[x][y] = 1;
     int xx , yy ;
     for(int i = 0 ; i < 8 ; i++){
@@ -33,10 +31,8 @@ void dfs(int x, int y)
         }
     }
 }
-int main()
-{
-    while(cin >> n >> m)
-    {
+int main() {
+    while(cin >> n >> m) {
         if(n==0 && m==0)break;
         filll();
         for(int i = 1 ; i <= n ; i++)
