@@ -1,3 +1,9 @@
+/*********************************Cycle Find**************************************/
+
+/*...........................Cycle Find in Directed Graph............................*/
+/*  given a directed graph consisting of n vertices and m edges ,is it possible to make this graph 
+acyclic by removing at most one edge from it ? */
+
 #include <bits/stdc++.h>
 using namespace std ;
 
@@ -10,8 +16,8 @@ void makeset(int n) {
 void dfs(int u) {
     color[u] = 2 ;
     for(int v : g[u]) {
-        if(color[v] == 2) {
-            cycle++ ;
+        if(color[v] == 2) { 
+            cycle++ ; // counting cycles...
         } else if(color[v] == 0) {
             dfs(v) ;
         }
