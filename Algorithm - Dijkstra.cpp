@@ -1,73 +1,72 @@
+/********************************Dijkstra*************************/
+/*....................Shortest Path on weighted graph and path printing..............*/
 
-// same as before just path printing included here..
 // Problem name : C. Dijkstra?
 // site : Codeforces
 
-struct node{
-    ll y , w;
-};
-vector <node> G[100001];
-vector <ll> dist ;
-ll path[100001] ;
-bool flag = 0;
-void dijkstra(ll source , ll destination , ll nodes){
-    dist.resize(nodes + 1 , 1e18);
-    dist[source] = 0;
-    priority_queue <pair <ll,ll> > pq;
-    pq.push({0,-source});
+#include <bits/stdc++.h>
+using namespace std ;
+ 
+#define mxN 100000
+#define INF 1e18
+ 
+vector <pair <long long , int> > G[mxN + 10] ;
+long long cost[mxN + 10] ;
+int path[mxN + 10] ;
+//path printing... 
+void pathprint(int u) {
+    if(path[u] == u) { 
+        cout << u << " " ;
+        return ;
+    }
+    pathprint(path[u]) ;
+    cout << u << " " ;
+}
+bool dijkstra(int start , int destination , int nodes) {
+    for(int i = 0 ; i <= nodes ; i++) {
+        cost[i] = INF ;
+        path[i] = i ;
+    }
+    // pq weight contains first...
+    priority_queue <pair <long long , int > > pq ;
+    cost[start] = 0 ;
+    path[start] = start ;
+    pq.push(make_pair(0 , start)) ;
     while(!pq.empty()) {
-        ll u = -pq.top().second;
-        ll wu = -pq.top().first;
-        pq.pop();
-        if(u == destination){
-            flag = 1;
-            return ;
-        }
-        if(wu > dist[u])
-            continue;
-        for(int i = 0 ; i < G[u].size() ; i++) {
-            node temp = G[u][i];
-            ll v = temp.y ;
-            ll wv = temp.w ;
-            if(wu + wv < dist[v]) { // path relaxation 
-                dist[v] = wu + wv ;
-                path[v] = u; // savinng Path here...
-                pq.push({-dist[v],-v});
+        int u = pq.top().second ;
+        long long wu = -pq.top().first ;
+        pq.pop() ;
+        if(u == destination && cost[destination] != INF) 
+            return 1 ;
+        if(cost[u] < wu)
+            continue ;
+        for(auto it : G[u]) {
+            int v = it.second ;
+            long long wv = it.first ;
+            if(cost[v] > wu + wv) { 
+                cost[v] = wu + wv ;
+                path[v] = u ;        // taking u as parent of v
+                pq.push(make_pair(-cost[v] , v)) ;
             }
         }
     }
-}
-// Shortest Path  Printing..
-void pathprint(ll from , ll to){
-    ll temp = to ;
-    vector <ll> v ;
-    while(flag) {
-        v.pb(temp) ;
-        if(temp == from)
-            break;
-        temp = path[temp];
-    }
-    for(ll i = v.size() - 1 ; i >= 0 && flag ; i--){
-        cout << v[i] << " ";
-    }
-    if(!flag)
-        printf("-1");
-    printf("\n");
+    return 0 ;
 }
 int main() {
-    int n , m  ;
+    int n , m ;
     cin >> n >> m ;
     for(int i = 0 ; i < m ; i++) {
-        ll a , b , w ;
-        cin >> a >> b >> w ;
-        node temp ;
-        temp.y = b ;
-        temp.w = w ;
-        G[a].pb(temp);
-        temp.y = a;
-        G[b].pb(temp);
+        int u , v ;
+        long long w ;
+        cin >> u >> v >> w ;
+        // weight contains first..
+        G[u].push_back(make_pair(w , v)) ;
+        G[v].push_back(make_pair(w , u)) ;
     }
-    dijkstra(1 , n , n + 1);
-    pathprint(1 , n) ;
-    return 0;
+    bool flag = dijkstra(1 , n , n) ;
+    if(flag)
+        pathprint(n) ;
+    else
+        cout << "-1\n" ;
+    return 0 ;
 }
