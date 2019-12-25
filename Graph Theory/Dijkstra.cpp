@@ -136,3 +136,112 @@ int main() {
     }
     return 0 ;
 }
+/*.................state space search..............*/
+
+/* finding the cheapest way to travel between cities, filling tank
+on the way. We assume that all cars use one unit of fuel per unit of distance, and
+start with an empty gas tank. */
+
+#include <bits/stdc++.h>
+using namespace std ;
+
+struct edge{
+    int x , dis ;
+    bool operator < ( const edge& p) const {
+        return dis > p.dis ;
+    }
+} ;
+struct node{
+    int x , cost , gass ;
+    bool operator < ( const node& p) const {
+        return cost > p.cost ;
+    }
+} ;
+
+#define mxN 1000
+#define INF 1e9
+
+int price[mxN + 10] ;
+vector <edge> G[mxN + 10] ;
+int cost[mxN + 10][110] ;
+
+void graph_clear(int nodes) {
+    for(int i = 0 ; i <= nodes ; i++) {
+        G[i].clear() ;
+    }
+}
+int dijkstra(int from ,int to , int capacity) {
+    for(int i = 0 ; i <= 1000 ; i++) {
+        for(int j = 0 ; j <= 100 ; j++) {
+            cost[i][j] = INF ;
+        }
+    }
+    priority_queue<node> pq ;
+    // not taking distance but taking the cost and current capacity of gass
+    // we only have to minimize the cost
+    cost[from][0] = 0 ;
+    //starting from start node and going with 0 fuel
+    pq.push({from , 0 , 0}) ;
+    while(!pq.empty()) {
+        int u = pq.top().x ;
+        int wu = pq.top().cost ;
+        int gas = pq.top().gass ;
+        pq.pop() ;
+        //if we reach our destination then its the minimum cost
+        if(u == to)
+            return wu ;
+        if(wu > cost[u][gas])
+            continue ;
+        // we are staying in the same node and we are only filling one per unit
+        if(gas < capacity) {
+            int newgas = wu + price[u] ;
+            if(cost[u][gas + 1] > newgas) {
+                cost[u][gas + 1] = newgas ;
+                pq.push({ u , newgas , gas + 1}) ;
+            }
+        }
+        for(int i = 0 ; i < G[u].size() ; i++) {
+            int v = G[u][i].x ;
+            int wv = G[u][i].dis ;
+            //if we can go in the other node within the current fuel then we are going
+            if(wv <= gas) {
+                int cap = gas - wv ;
+                // path relaxing...
+                if(wu < cost[v][cap]) {
+                    cost[v][cap] = wu ;
+                    pq.push({v , wu , cap}) ;
+                }
+            }
+        }
+    }
+    return -1 ;
+}
+int main() {
+    int nodes , edges ;
+    while(cin >> nodes >> edges) {
+        for(int i = 0 ; i < nodes ; i++) {
+            cin >> price[i] ;
+        }
+        for(int i = 0 ; i < edges ; i++) {
+            int u , v , d ;
+            cin >> u >> v >> d ;
+            G[u].push_back({v , d}) ;
+            G[v].push_back({u , d}) ;
+        }
+        int query ;
+        cin >> query ;
+        while(query--) {
+            int capacity , from , to ;
+            cin >> capacity >> from >> to ;
+            int ans = dijkstra(from ,to , capacity) ;
+            if(ans == -1) {
+                cout << "impossible\n";
+            }
+            else {
+                cout << ans << "\n" ;
+            }
+        }
+        graph_clear(nodes) ;
+    }
+    return 0 ;
+}
