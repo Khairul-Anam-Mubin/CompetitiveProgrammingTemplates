@@ -1,4 +1,4 @@
-/***********************Articulation Bridges************************/
+/***********************Bridges************************/
 /*.....................critical links......................*/
 /* Given the graph , finds the all critical links..*/
 #include <bits/stdc++.h>
