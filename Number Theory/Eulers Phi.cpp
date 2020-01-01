@@ -23,7 +23,6 @@ void PreCalPhi() {
             }
         }
     }
-    
     for(int i = 1 ; i <= mxN ; i++)
         phi[i] = (phi[i] * phi[i]) ;
     // Cumulative sum for range sum query...
