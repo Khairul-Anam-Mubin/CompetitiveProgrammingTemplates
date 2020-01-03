@@ -16,8 +16,24 @@ void divisors(long long n) {
         }
     } 
 }
+/*...............Divisors Sieve.................*/
+/* Generating all divisors of a number from 1 to n.. */
+// complexity : nlogn
 
-/*...................NOD..................*/
+#include <bits/stdc++.h>
+using namespace std ;
+ 
+#define mxN 1000
+vector <int> v[mxN + 5] ;
+void DivSieve() {
+    for(int i = 1 ; i <= mxN ; i++) {
+        for(int j = i ; j <= mxN ; j += i) {
+            v[j].push_back(i) ; // i is a divisors of j
+        }
+    }
+}
+
+/*...................NOD (Number of divisors)..................*/
 /* Finding the number of divisors of a number n */
 
 // complexity : O(nloglogn + klogn)
