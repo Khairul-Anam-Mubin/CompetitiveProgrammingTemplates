@@ -60,7 +60,7 @@ int main() {
         if(x == 1) {
             int left , right ; cin >> left >> right ;
             // from 1 to n we are searching left to right segment or range sum..
-            int ans = SumQuery(1 , 1 , n , left , right) ; // returning range sum..
+            int ans = SumQuery(1 , 0 , n - 1 , left , right) ; // returning range sum..
             cout << ans << "\n" ;
         }
         else if(x == 2) {
@@ -132,7 +132,7 @@ int main() {
         if(x == 1) {
             int left , right ;
             cin >> left >> right ;
-            int ans = MinQuery(1 , 1 , n , left , right) ; // query for range..
+            int ans = MinQuery(1 , 0 , n - 1 , left , right) ; // query for range..
             cout << ans << "\n" ;
         }
         else if(x == 2) {
