@@ -230,7 +230,97 @@ int main() {
     }
     return 0 ;
 }
+/*************** Segment tree considaring each segment a array*************/
+/* Given a string of len n and q queries with range l , r..you have to count
+the number of distinct charecters in a given range. and single Update possible*/
 
+#include <bits/stdc++.h>
+using namespace std ;
+
+#define fasterIO ios_base::sync_with_stdio(0);cin.tie(0); cout.tie(0) ;
+#define mxN 100000
+
+struct node {
+    bool ch[26] ;
+    node() {
+        for(int i = 0 ; i < 26 ; i++)
+            ch[i] = 0 ;
+    }
+} ;
+node segtree[mxN * 4] ;
+node temp , p ;
+string str ;
+
+void Build(int cur , int left , int right) {
+    if(left == right) {
+        segtree[cur].ch[str[left] - 'a'] = 1 ;
+        return  ;
+    }
+    int mid = (left + right) / 2 ;
+    Build(cur * 2 , left , mid) ;
+    Build(cur * 2 + 1 , mid + 1 , right) ;
+    for(int i = 0 ; i < 26 ; i++) {
+        segtree[cur].ch[i] = segtree[cur * 2].ch[i] | segtree[cur * 2 + 1].ch[i] ;
+    }
+    return ;
+}
+void Update(int cur , int left , int right , int pos , char val) {
+    if(pos > right || pos < left)
+        return ;
+    if(left == pos && right == pos) {
+        segtree[cur].ch[str[pos] - 'a'] = 0 ;
+        segtree[cur].ch[val - 'a'] = 1 ;
+        str[pos] = val ;
+        return ;
+    }
+    int mid = (left + right) / 2 ;
+    Update(cur * 2 , left , mid , pos , val) ;
+    Update(cur * 2 + 1 , mid + 1 , right , pos , val) ;
+    for(int i = 0 ; i < 26 ; i++)
+        segtree[cur].ch[i] = segtree[cur * 2 ].ch[i] | segtree[cur * 2 + 1].ch[i] ;
+    return ;
+}
+node *Query(int cur , int left , int right , int l , int r) {
+    if(l > right || r < left) 
+        return &temp ;
+    if(left >= l && right <= r)
+        return &segtree[cur] ;
+    int mid = (left + right) / 2 ;
+    node p1 = *Query(cur * 2 , left , mid , l , r) ;
+    node p2 = *Query(cur * 2 + 1 , mid + 1 , right , l , r) ;
+    for(int i = 0 ; i < 26 ; i++)
+        p.ch[i] = p1.ch[i] | p2.ch[i] ;
+    return &p ; 
+}
+int main() {
+    fasterIO
+    cin >> str ;
+    int n = str.size() ;
+    str = "0" + str ;
+    Build(1 , 1, n) ;
+    int q ; cin >> q ;
+    while(q--) {
+        int x ; cin >> x ;
+        if(x == 1) {
+            int pos ; char val ;
+            cin >> pos >> val ;
+            Update(1 , 1, n , pos , val) ;
+        } else if(x == 2) {
+            int l , r ;
+            cin >> l >> r ;
+            node ans = *Query(1 , 1, n, l , r) ;
+            int sum = 0 ; 
+            for(int i = 0 ; i < 26 ; i++) {
+                if(ans.ch[i])
+                    sum++; 
+                p.ch[i] = 0 ;
+            }
+            cout << sum << "\n" ;
+        }
+    }
+    
+    return 0 ;
+}
 /*********************Segmentree Lazy Propagation**********************/
 
 /*.......................Range Update............................*/
