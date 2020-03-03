@@ -428,3 +428,89 @@ int main() {
     }
     return 0 ;
 }
+
+/* Segmentree range update and range sum lazy without propagation.. */
+
+#define mxN 100000
+long long ar[mxN + 10] ;
+struct {
+    long long sum , prop ;
+} segtree[4 * mxN] ;
+void Clear(int x) {
+    for(int i = 0 ; i < x ; i++) {
+        segtree[i].sum = 0 ;
+        segtree[i].prop = 0 ;
+        if(i < mxN)
+            ar[i] = 0 ;
+    }
+
+}
+void Build(int cur , int left , int right) {
+    if(left == right) {
+        segtree[cur].sum = ar[left] ;
+        segtree[cur].prop = 0 ;
+        return ;
+    }
+    int mid = (left + right) / 2 ;
+    Build(cur * 2 , left , mid) ;
+    Build(cur * 2 + 1 , mid + 1 , right) ;
+    segtree[cur].sum = segtree[cur * 2].sum + segtree[cur * 2 + 1].sum ;
+    segtree[cur].prop = 0 ;
+    return ;
+}   
+void Update(int cur , int left ,int right , int i , int j , long long val) {
+    if(i > right || j < left)
+        return ;
+    if(left >= i && right <= j) {
+        segtree[cur].sum += (right - left + 1) * val ;
+        segtree[cur].prop += val ;
+        return ;
+    }
+    int mid = (left + right) / 2 ;
+    Update(cur * 2 , left , mid , i , j , val) ;
+    Update(cur * 2 + 1 , mid + 1 , right , i , j , val) ;
+    segtree[cur].sum = segtree[cur * 2].sum + segtree[cur * 2 + 1].sum + (right - left + 1) * segtree[cur].prop ;
+    return ;    
+}
+long long Query(int cur , int left , int right , int i , int j , long long carry = 0) {
+    if(i > right || j < left) {
+        return 0 ;
+    }
+    if(left >= i && right <= j) {
+        return segtree[cur].sum + carry * (right - left + 1) ;
+    }
+    int mid = (left + right) / 2 ;
+    long long p1 = Query(cur * 2 , left , mid , i , j , carry + segtree[cur].prop) ;
+    long long p2 = Query(cur * 2 + 1 , mid + 1 , right , i , j , carry + segtree[cur].prop) ;
+    return p1 + p2 ;
+}
+int main() {
+    FasterIO
+    int tc ; cin >> tc ;
+    while(tc--) {
+        int n , c ; 
+        cin >> n >> c ;
+        Clear(4 * mxN) ;
+        Build(1 , 1 , n) ;
+        while(c--) {
+            int q  ;
+            cin >> q ;
+            if(q == 0) {
+                int i , j ;
+                if(i > j)
+                    swap(i , j) ;
+                long long val ;
+                cin >> i >> j >> val ;
+                Update(1 , 1 , n , i , j , val) ;
+            } else if(q == 1) {
+                int i , j ;
+                cin >> i >> j ;
+                if(i > j)
+                    swap(i , j) ;
+                long long ans = Query(1 , 1 , n , i , j) ;
+                cout << ans << "\n" ;
+            }
+        }
+    }        
+    return 0 ;  
+}
