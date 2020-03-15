@@ -36,7 +36,17 @@ void Remove(int pos) {
     if(freq[ar[pos]] == 0)
         cnt-- ;
 }
+void Input_Query(q) {
+    for(int i = 0 ; i < q ; i++) {
+        cin >> Q[i].l >> Q[i].r ;
+        Q[i].idx = i ;
+        Q[i].l-- ;
+        Q[i].r-- ;
+    }
+}
 void MosAlgo(int q) {
+    Input_Query(q) ;
+    sort(Q , Q + q , Cmp) ;
     int ML = 0 , MR = -1 ;
     for(int i = 0 ; i < q ; i++) {
         int L = Q[i].l ;
@@ -67,13 +77,6 @@ int main() {
     for(int i = 0 ; i < n ; i++)
         cin >> ar[i] ;
     cin >> q ;
-    for(int i = 0 ; i < q ; i++) {
-        cin >> Q[i].l >> Q[i].r ;
-        Q[i].idx = i ;
-        Q[i].l-- ;
-        Q[i].r-- ;
-    }
-    sort(Q , Q + q , Cmp) ;
     MosAlgo(q) ;
     for(int i = 0 ; i < q ; i++) {
         cout << ans[i] << "\n" ;
