@@ -36,7 +36,7 @@ void Remove(int pos) {
     if(freq[ar[pos]] == 0)
         cnt-- ;
 }
-void Input_Query(q) {
+void Input_Query(int q) {
     for(int i = 0 ; i < q ; i++) {
         cin >> Q[i].l >> Q[i].r ;
         Q[i].idx = i ;
