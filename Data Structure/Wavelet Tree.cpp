@@ -136,3 +136,30 @@ int main() {
     }
     return 0;
 }
+/*................MKTHNUM..............*/
+int main() {
+    FasterIO
+    int n , m ;
+    cin >> n >> m ;
+    int ar[n + 1] ; 
+    map<int ,int> mp , rev_mp ;
+    for(int i = 1 ; i <= n ; i++) {
+        cin >> ar[i] ;
+        mp[ar[i]] = 1 ;
+    }
+    int k = 1 ;
+    for(auto &it : mp) {
+        rev_mp[k] = it.first ;
+        it.second = k++ ;
+    }
+    for(int i = 1 ; i <= n ; i++) {
+        ar[i] = mp[ar[i]] ;
+    }
+    wavelet_tree T(ar + 1 , ar + n + 1 , 1 , k) ;
+    while(m--) {
+        int l , r , k ;
+        cin >> l >> r >> k ;
+        cout << rev_mp[T.kth(l , r ,k)] << "\n" ;
+    }
+    return 0 ;  
+}
