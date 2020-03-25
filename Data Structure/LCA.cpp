@@ -25,7 +25,7 @@ void Reset() {
         g[i].clear() ;
     }
 }
-pair<int , int> Query(int u , int v) {
+pair<int , int> LCA(int u , int v) {
     int mn = INF9 , mx = -INF9 ;
     if(level[u] < level[v]) 
         swap(u , v) ;
@@ -108,7 +108,7 @@ void Solve() {
         int u , v ;
         scanf("%d%d",&u,&v) ;
         u-- , v-- ;
-        pair<int,int> ans = Query(u , v) ;
+        pair<int,int> ans = LCA(u , v) ;
         printf("%d %d\n", ans.first , ans.second);
     }
 }
