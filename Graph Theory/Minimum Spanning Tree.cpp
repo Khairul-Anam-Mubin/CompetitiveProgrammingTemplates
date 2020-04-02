@@ -149,12 +149,14 @@ struct MST {
         nodes = n;
         mstcost = 0;
         dsu.Makeset(nodes);
+        mstedges.clear();
     }
     void Init(int n) {
         nodes = n;
         mstcost = 0;
         dsu.Makeset(nodes);
         edges.clear();
+        mstedges.clear();
     }
     void AddEdge(int u, int v, int w) {
         edges.push_back(make_pair(w , make_pair(u , v)));
