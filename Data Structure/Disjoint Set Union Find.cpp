@@ -1,52 +1,64 @@
 /*************************Disjoint Set Union Find**************************/
 
-/*.................Number of connecting components..............*/
-/* Given N people and M groups , how many people are in same components or How many
-people are connect to a certain node.*/
-
-#include <bits/stdc++.h>
-using namespace std;
-
-int dsu[1000000]; // disjoint set array
-int tot[1000000]; // Size array
-//Make set operation for initialize. Firstly there are N sets indicating and all are size (tot) = 1.
-void makeset(int n){
-    for(int i = 0 ; i <= n ; i++){
-        dsu[i] = i;
-        tot[i] = 1;
+struct DSU {
+    vector <int> parent;
+    vector <int> siz;
+    DSU(int mxN) {
+        mxN <<= 1;
+        parent.resize(mxN + 1);
+        siz.resize(mxN + 1);
     }
-}
-//This Function finds parent and mark all child as same parent and also doing path compression 
-int Find(int child){
-    if(dsu[child] == child)
-        return child;
-    return dsu[child] = Find(dsu[child]);
-}
-//Simply Unions two set and memorizing its size in its root index of tot..
-void Union(int x,int y){
-    x = Find(x);
-    y = Find(y);
-    if(x != y){
-        dsu[x] = y;
-        tot[y] += tot[x];
-    }
-}
-int main() {
-    int n , m ;
-    cin >> n >> m;
-    makeset(n);
-    while(m--) {
-        int k ; cin >> k ;
-        if(!k) continue;
-        int first ; cin >> first;
-        for(int i = 1 ; i < k ; i++){
-            int add; cin >> add;
-            Union(first,add);
+    void Makeset(int n) {
+        for (int i = 1 ; i <= n ; i++) {
+            parent[i] = n + i;
+            parent[n + i] = n + i;
+            siz[n + i] = 1;
         }
     }
-    //Finding Total number of elements in a particular set
-    for(int i = 1 ; i <= n  ; i++)
-        cout << tot[Find(i)] << " ";
-    cout << "\n";
-    return 0;
+    int Find(int u) {
+        if (parent[u] == u) return u ;
+        return parent[u] = Find(parent[u]) ;
+    }
+    void Union(int u , int v) {
+        u = Find(u);
+        v = Find(v);
+        if (u != v) {
+            if (siz[u] < siz[v]) swap(u , v);
+            parent[v] = u;
+            siz[u] += siz[v];
+        }
+    }
+    bool SameSet(int u , int v) {
+        return (Find(u) == Find(v)) ;
+    }
+    void MoveUtoSetV(int u , int v) {
+        if (SameSet(u , v)) return;
+        int x = Find(u);
+        int y = Find(v);
+        siz[x]--;
+        siz[y]++;
+        parent[u] = y;
+    }
+    int Size(int u) {
+        return siz[Find(u)];
+    }
+};
+int main() {
+    FasterIO
+    DSU dsu(1000001);
+    int n , m;
+    cin >> n >> m;
+    dsu.Makeset(n);
+    for (int i = 1; i <= m; i++) {
+        int k; cin >> k;
+        if (!k) continue;
+        int u; cin >> u;
+        for (int j = 1; j < k; j++) {
+            int v; cin >> v;
+            dsu.Union(u , v);
+        }
+    }
+    for (int i = 1; i <= n; i++)
+        cout << dsu.Size(i) << " ";
+    return 0 ;
 }
