@@ -77,7 +77,6 @@ int main() {
     return 0 ;
 }
 /*....................Kruskal Algrithm.................*/
-
 // mxN have to define before...
 const int mxN = 30;
 struct DSU {
@@ -145,11 +144,8 @@ struct MST {
         }
     }
     void Init(int n , const vector<pair<int , pair<int , int>>> &_edges) {
+        Init(n);
         edges = _edges;
-        nodes = n;
-        mstcost = 0;
-        dsu.Makeset(nodes);
-        mstedges.clear();
     }
     void Init(int n) {
         nodes = n;
