@@ -1,73 +1,5 @@
 // 1348 - Aladdin and the Return Journey
 
-/**************************Segment tree*****************************/
-struct SegmentTree {
-    vector <long long> seg;
-    vector <long long> lazy;
-    vector <long long> ar;
-    void Init(int N) {
-        seg.assign(N << 2, 0);
-        lazy.assign(N << 2 , 0);
-        return;
-    }
-    void Init(const vector <long long> &s) {
-        Init(s.size() + 1);
-        ar = s;
-        return;    
-    }
-    void PushDown(int cur , int left , int right) {
-        seg[cur] += (right - left + 1) * lazy[cur];
-        if (left != right) {        
-            lazy[cur << 1] += lazy[cur];  
-            lazy[cur << 1 | 1] += lazy[cur];
-        }
-        lazy[cur] = 0;   
-        return;
-    }
-    long long Merge(long long x , long long y) {
-        return x + y;
-    }
-    void Build(int cur , int left , int right) {
-        lazy[cur] = 0;
-        if (left == right) {
-            seg[cur] = ar[left];
-            return;
-        }
-        int mid = (left + right) >> 1;
-        Build(cur << 1 , left , mid);
-        Build(cur << 1 | 1 , mid + 1 , right);
-        seg[cur] = Merge(seg[cur << 1] , seg[cur << 1 | 1]);
-        return;
-    }
-    void Update(int cur , int left , int right , int pos , long long val) {
-        Update(cur , left , right , pos , pos , val);
-        return;
-    }
-    void Update(int cur , int left , int right , int l , int r , long long val) {
-        if (lazy[cur] != 0) PushDown(cur , left , right);         
-        if (l > right || r < left) return;
-        if (left >= l && right <= r) {
-            lazy[cur] = val;
-            PushDown(cur , left , right);
-            return ;
-        }
-        int mid = (left + right) >> 1;
-        Update(cur << 1 , left , mid , l , r , val);
-        Update(cur << 1 | 1 , mid + 1 , right , l , r , val);
-        seg[cur] = Merge(seg[cur << 1] , seg[cur << 1 | 1]);
-        return ;
-    }
-    long long Query(int cur , int left , int right , int l , int r) {
-        if (l > right || r < left) return 0;
-        if (lazy[cur] != 0) PushDown(cur , left , right);
-        if (left >= l && right <= r) return seg[cur];
-        int mid = (left + right) >> 1;
-        long long p1 = Query(cur << 1 , left , mid , l , r);
-        long long p2 = Query(cur << 1 | 1 , mid + 1 , right , l , r);
-        return Merge(p1 , p2);
-    }
-} T;
-
 /**************************HeavyLightDecomposition***********************/
 /*  1.  All nodes are number from 0 to n - 1  */ 
 /*  2.  Assign the graph by Init(graph) or simply Init(total nodes) and 
@@ -99,17 +31,14 @@ struct HeavyLightDecompose {
         chain_ind.resize(N);
         node_serial.resize(N);
         serial_node.resize(N);
-        return;
     }
     void Init(const vector <vector<int>> &_g) {
         Init(_g.size());
         g = _g;
-        return;
     }
     void AddEdge(int u , int v) {
         g[u].push_back(v) ;
         g[v].push_back(u) ;
-        return;
     }
     void TakeNodeVal(const vector <long long> &_node_val) {
         node_val = _node_val;
@@ -132,10 +61,8 @@ struct HeavyLightDecompose {
             parent[v] = u;
             depth[v] = depth[u] + 1;
             Dfs(v , u);
-            sub[u] += sub[v];
-            
+            sub[u] += sub[v];   
         }
-        return;
     }
     void HLD(int u , int par = -1) {
         if (chain_head[chain_no] == -1) chain_head[chain_no] = u;
@@ -159,7 +86,6 @@ struct HeavyLightDecompose {
                 HLD(v , u);
             }
         }
-        return;
     }
     void Update(int p , int val) {
         T.Update(1 , 0 , N - 1, node_serial[p] , -node_val[p]);
@@ -179,35 +105,3 @@ struct HeavyLightDecompose {
         return ans;
     }
 } hd;
-int main() {
-    Faster
-    Test {
-        int n; cin >> n;
-        hd.Init(n);
-        vector <long long> pos;
-        for (int i = 0; i < n; i++) {
-            ll x; cin >> x;
-            pos.PB(x);
-        }
-        hd.TakeNodeVal(pos);
-        for (int i = 0; i < n - 1; i++) {
-            int u , v; cin >> u >> v;
-            hd.AddEdge(u , v);
-        }
-        hd.Build();
-        int q; cin >> q;
-        cout << "Case " << tc << ":\n";
-        while (q--) {
-            int x; cin >> x;
-            if (x == 0) {
-                int u , v; cin >> u >> v;
-                cout << hd.Query(u , v) << "\n";
-            } else if (x == 1) {
-                int node , val;
-                cin >> node >> val;
-                hd.Update(node , val);
-            }
-        }
-    }
-    return 0;
-}
