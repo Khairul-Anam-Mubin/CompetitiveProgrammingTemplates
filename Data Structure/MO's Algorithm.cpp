@@ -44,22 +44,10 @@ void MosAlgo(int q) {
     for (int i = 0 ; i < q ; i++) {
         int L = Q[i].l;
         int R = Q[i].r;
-        while (ML > L) {
-            ML--;
-            Add(ML);
-        }
-        while (MR < R) {
-            MR++;
-            Add(MR);
-        }
-        while (ML < L) {
-            Remove(ML);
-            ML++;
-        }
-        while (MR > R) {
-            Remove(MR);
-            MR--;
-        }
+        while (ML > L) Add(--ML);
+        while (MR < R) Add(++MR);
+        while (ML < L) Remove(ML++);
+        while (MR > R) Remove(MR--);
         ans[Q[i].idx] = cnt;
     }
 }
