@@ -8,66 +8,59 @@ elements in the given range */
 using namespace std ;
 
 #define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-#define BLOCK 555
-
-// Saving the querys..
+const int BLOCK = 555;
+const int mxN = 100000;
 struct query {
-    int l ;
-    int r ;
-    int idx ;
-} ;
-query Q[200001] ; 
-int ar[30001] , ans[200001] ;
-int freq[1000001] ;
-int cnt = 0 ;
-
-bool Cmp(query a , query b) {
-    if(a.l / BLOCK != b.l / BLOCK)
-        return a.l / BLOCK < b.l / BLOCK ;
-    return a.r < b.r ; 
+    int l , r , idx;
+};
+query Q[mxN + 5]; 
+int ar[mxN + 5] , ans[mxN + 5];
+int freq[mxN + 5];
+int cnt = 0;
+bool Cmp(query &a , query &b) {
+    if (a.l / BLOCK != b.l / BLOCK)
+        return a.l / BLOCK < b.l / BLOCK;
+    return a.r < b.r; 
 }
 void Add(int pos) {
-    freq[ar[pos]]++ ;
-    if(freq[ar[pos]] == 1)
-        cnt++ ;
+    freq[ar[pos]]++;
+    if (freq[ar[pos]] == 1) cnt++;
 }
 void Remove(int pos) {
-    freq[ar[pos]]-- ;
-    if(freq[ar[pos]] == 0)
-        cnt-- ;
+    freq[ar[pos]]--;
+    if (freq[ar[pos]] == 0) cnt--;
 }
 void Input_Query(int q) {
-    for(int i = 0 ; i < q ; i++) {
-        cin >> Q[i].l >> Q[i].r ;
-        Q[i].idx = i ;
-        Q[i].l-- ;
-        Q[i].r-- ;
+    for (int i = 0 ; i < q ; i++) {
+        cin >> Q[i].l >> Q[i].r;
+        Q[i].idx = i;
+        Q[i].l--; Q[i].r--;
     }
 }
 void MosAlgo(int q) {
-    Input_Query(q) ;
-    sort(Q , Q + q , Cmp) ;
-    int ML = 0 , MR = -1 ;
-    for(int i = 0 ; i < q ; i++) {
-        int L = Q[i].l ;
-        int R = Q[i].r ;
-        while(ML > L) {
-            ML-- ;
-            Add(ML) ;
+    Input_Query(q);
+    sort(Q , Q + q , Cmp);
+    int ML = 0 , MR = -1;
+    for (int i = 0 ; i < q ; i++) {
+        int L = Q[i].l;
+        int R = Q[i].r;
+        while (ML > L) {
+            ML--;
+            Add(ML);
         }
-        while(MR < R) {
-            MR++ ;
-            Add(MR) ;
+        while (MR < R) {
+            MR++;
+            Add(MR);
         }
-        while(ML < L) {
-            Remove(ML) ;
-            ML++ ;
+        while (ML < L) {
+            Remove(ML);
+            ML++;
         }
-        while(MR > R) {
-            Remove(MR) ;
-            MR-- ;
+        while (MR > R) {
+            Remove(MR);
+            MR--;
         }
-        ans[Q[i].idx] = cnt ;
+        ans[Q[i].idx] = cnt;
     }
 }
 int main() {
