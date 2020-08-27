@@ -25,6 +25,7 @@ Usually it's helpful for the competitive programmers to keep their own templates
 6. Square Root Decomposition ( Offline Queries )
 7. Trie (Data compression + String queris)
 8. Wavelet Tree 
+9. LCA (Lowest Common Ancestro)
 
 ### Dynamic Programming
 1. Coin Change
