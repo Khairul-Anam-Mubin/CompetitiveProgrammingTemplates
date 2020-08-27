@@ -11,7 +11,7 @@ Usually it's helpful for the competitive programmers to keep their own templates
 * Number Theory
 * Strings
 
-## Keyword and Short Summary of contents
+## Keyword and Short Summary of contents:
 
 ### Big Integer Library
 1. Supports all arithmetic operations.
