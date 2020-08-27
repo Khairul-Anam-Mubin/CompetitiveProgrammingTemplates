@@ -55,3 +55,12 @@ Usually it's helpful for the competitive programmers to keep their own templates
 1. KMP ( knuth-morrison-prat algorithm, Substring search, longest pallindrome, string compression )
 2. Z Algorithm ( Same as kmp )
 3. Hashing ( basically it's a data structure but some string operations can be done effeciently)
+
+### Sorting Algorithms
+1. Bubble Sort ( Complexity : O(N^2) )
+2. Counting Sort ( Complexity : O(N) )
+1. Heap Sort ( Complexity : O(NlogN) )
+1. Insertion Sort ( Complexity : O(N^2) )
+1. Merge Sort ( Complexity : O(NlogN) )
+1. Quick Sort ( Complexity : O(NlogN) )
+1. Selection Sort ( Complexity : O(N^2) )
