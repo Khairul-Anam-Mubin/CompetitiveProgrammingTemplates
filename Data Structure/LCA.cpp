@@ -1,3 +1,97 @@
+/***********************Lowest Common Ancestor***********************/
+/* 1.   All nodes are number 0 to n - 1 */
+/* 2.   simply Init(total nodes) and call AddEdge(u , v) for all the edges */
+/* 3.   Call Build() to run dfs and build the sparse table */
+
+struct LowestCommonAncestor {
+    int N , root = 0, po;
+    
+    vector <vector <int> > g;
+    vector <vector <int> > sptab; 
+    vector <int> depth;
+    vector <int> parent;
+    
+    void Init(int _n) {
+        N = _n; 
+        po = log2((N)) + 1;
+        g.assign(N, {});
+        depth.resize(N);
+        parent.resize(N);
+        sptab.assign(N, {});
+    }
+    void AddEdge(int u , int v) {
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
+    void Dfs(int u , int par = -1) {
+        if(par == -1) {
+            depth[u] = 0;
+            parent[u] = -1;
+        }
+        for(int v : g[u]) {
+            if (v == par) continue;
+            parent[v] = u;
+            depth[v] = depth[u] + 1;
+            Dfs(v , u);
+        }
+    } 
+    void SparceTable() {
+        for(int i = 0 ; i < N ; i++) sptab[i][0] = parent[i];
+        for(int j = 1 ; (1 << j) < N ; j++) {
+            for(int i = 0 ; i < N ; i++) {
+                if(sptab[i][j - 1] != -1) {
+                    sptab[i][j] = sptab[sptab[i][j - 1]][j - 1];
+                }
+            }
+        }
+    }
+    void Build() {
+        for(int i = 0 ; i < N ; i++) {
+            for(int j = 0 ; j <= po ; j++) {
+                sptab[i].push_back(-1);
+            }
+        }
+        Dfs(root);
+        SparceTable();
+    }
+    int Lca(int u , int v) {
+        if(depth[u] < depth[v]) swap(u , v);
+        int log;
+        for(log = 1 ; (1 << log) <= depth[u] ; log++); log--;
+        for(int i = log ; i >= 0 ; i--) {
+            if(depth[u] - (1 << i) >= depth[v]) {
+                u = sptab[u][i];
+            }
+        }
+        if(u == v) return u;
+        for(int i = log ; i >= 0 ; i--) {
+            if(sptab[u][i] != -1 && sptab[u][i] != sptab[v][i]) {
+                u = sptab[u][i];
+                v = sptab[v][i];
+            } 
+        }
+        return parent[u];
+    }
+    int KthAncestor(int u, int k) {
+        int log;
+        for(log = 1 ; (1 << log) <= depth[u] ; log++); log--;
+        for(int i = log ; i >= 0 ; i--) {
+            if(k - (1 << i) >= 0) {
+                u = sptab[u][i];
+                k -= (1 << i);
+            }
+        }
+        return u;
+    }
+    int Getdist(int u , int v) {
+        return (depth[u] + depth[v] - (2 * (depth[Lca(u , v)]))) ;
+    }
+    bool IsAnsector(int u , int v) {
+        int cur = Lca(u , v);
+        if(cur == u) return 1;
+        return 0;
+    }
+} lca;
 /**********************LCA Sparse Table************************/
 /*Given a tree , and q query , in each query two node u , v are given , 
 find the LCA of u , v or find the max - min wight through their path */
