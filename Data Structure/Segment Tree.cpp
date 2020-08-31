@@ -1,5 +1,66 @@
 /*********************************Segment Tree**************************************/
 
+struct SegmentTree {
+    vector <long long> seg;
+    vector <long long> lazy;
+    vector <long long> ar;
+    void Init(int N) {
+        seg.assign(N << 2, 0);
+        lazy.assign(N << 2 , 0);
+    }
+    void Init(const vector <long long> &s) {
+        Init(s.size() + 1);
+        ar = s;
+    }
+    void PushDown(int cur , int left , int right) {
+        seg[cur] += (right - left + 1) * lazy[cur];
+        if (left != right) {        
+            lazy[cur << 1] += lazy[cur];  
+            lazy[cur << 1 | 1] += lazy[cur];
+        }
+        lazy[cur] = 0;
+    }
+    long long Merge(long long x , long long y) {
+        return x + y;
+    }
+    void Build(int cur , int left , int right) {
+        lazy[cur] = 0;
+        if (left == right) {
+            seg[cur] = ar[left];
+            return;
+        }
+        int mid = (left + right) >> 1;
+        Build(cur << 1 , left , mid);
+        Build(cur << 1 | 1 , mid + 1 , right);
+        seg[cur] = Merge(seg[cur << 1] , seg[cur << 1 | 1]);
+    }
+    void Update(int cur , int left , int right , int pos , long long val) {
+        Update(cur , left , right , pos , pos , val);
+    }
+    void Update(int cur , int left , int right , int l , int r , long long val) {
+        if (lazy[cur] != 0) PushDown(cur , left , right);         
+        if (l > right || r < left) return;
+        if (left >= l && right <= r) {
+            lazy[cur] = val;
+            PushDown(cur , left , right);
+            return ;
+        }
+        int mid = (left + right) >> 1;
+        Update(cur << 1 , left , mid , l , r , val);
+        Update(cur << 1 | 1 , mid + 1 , right , l , r , val);
+        seg[cur] = Merge(seg[cur << 1] , seg[cur << 1 | 1]);
+    }
+    long long Query(int cur , int left , int right , int l , int r) {
+        if (l > right || r < left) return 0;
+        if (lazy[cur] != 0) PushDown(cur , left , right);
+        if (left >= l && right <= r) return seg[cur];
+        int mid = (left + right) >> 1;
+        long long p1 = Query(cur << 1 , left , mid , l , r);
+        long long p2 = Query(cur << 1 | 1 , mid + 1 , right , l , r);
+        return Merge(p1 , p2);
+    }
+} T;
+
 /*...........................Range Sum Query(Update Single)............................*/
 /* Given an array of length N , and Query the sum in range left , right..Array can be update in a particular 
 position in each query.. */
