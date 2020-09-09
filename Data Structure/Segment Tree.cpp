@@ -209,369 +209,106 @@ int main() {
     }
     return 0 ;
 }
-/*.............................Range query Most Frequent values(non-update).....................*/
-/* Given an array of length n and q query, in each l , r you have to tell the most frquecy.. 
 
-/* 1 based index */
-// Uva : 11235
-
+/****************2D Segment tree************************/
 #include <bits/stdc++.h>
-using namespace std ;
+using namespace std;
 
-#define INF 1e9
-#define mxN 100000
-int ar[mxN + 10] ;
-int dp[mxN + 10] ;
-vector <pair <int , int> > segtree(mxN * 4) ;  
+const int mxN = 1e3;
+int a[mxN + 1][mxN + 1];
+int t[mxN << 2][mxN << 2];
+int m; 
 
-pair <int , int> getmax(pair <int , int> &a , pair <int ,int> &b) {
-    if(a.first > b.first)
-        return a ;
-    else if(a.first < b.first) 
-        return b ;
-    if(a.second >= b.second)
-        return a ;
-    else
-        return b ;
-}
-void Build(int cur , int left , int right) {
-    if(left == right) {
-        segtree[cur] = make_pair(dp[left] , left);
-        return ;
+void build_y(int vx, int lx, int rx, int vy, int ly, int ry) {
+    if (ly == ry) {
+        if (lx == rx)
+            t[vx][vy] = a[lx][ly];
+        else
+            t[vx][vy] = t[vx*2][vy] + t[vx*2+1][vy];
+    } else {
+        int my = (ly + ry) / 2;
+        build_y(vx, lx, rx, vy*2, ly, my);
+        build_y(vx, lx, rx, vy*2+1, my+1, ry);
+        t[vx][vy] = t[vx][vy*2] + t[vx][vy*2+1];
     }
-    int mid = (left + right) / 2 ;
-    Build(cur * 2 , left , mid) ;
-    Build(cur * 2 + 1 , mid + 1 , right) ;
-    segtree[cur] = getmax(segtree[cur * 2] , segtree[cur * 2 + 1]) ;
-    return ;
 }
-pair <int , int> Query(int cur , int left , int right ,int l , int r) {
-    if(l > right || r < left)
-        return make_pair(-INF , 0) ;
-    if(left >= l && right <= r) 
-        return segtree[cur] ;
-    int mid = (left + right) / 2 ;
-    pair <int , int> p1 = Query(cur * 2 , left , mid , l , r) ;
-    pair <int , int> p2 = Query(cur * 2 + 1 , mid + 1 , right , l , r) ;
-    return getmax(p1 , p2) ;
+void build_x(int vx, int lx, int rx) {
+    if (lx != rx) {
+        int mx = (lx + rx) / 2;
+        build_x(vx*2, lx, mx);
+        build_x(vx*2+1, mx+1, rx);
+    }
+    build_y(vx, lx, rx, 1, 0, m-1);
+}
+int sum_y(int vx, int vy, int tly, int try_, int ly, int ry) {
+    if (ly > ry) 
+        return 0;
+    if (ly == tly && try_ == ry)
+        return t[vx][vy];
+    int tmy = (tly + try_) / 2;
+    return sum_y(vx, vy*2, tly, tmy, ly, min(ry, tmy))
+         + sum_y(vx, vy*2+1, tmy+1, try_, max(ly, tmy+1), ry);
+}
+int sum_x(int vx, int tlx, int trx, int lx, int rx, int ly, int ry) {
+    if (lx > rx)
+        return 0;
+    if (lx == tlx && trx == rx)
+        return sum_y(vx, 1, 0, m-1, ly, ry);
+    int tmx = (tlx + trx) / 2;
+    return sum_x(vx*2, tlx, tmx, lx, min(rx, tmx), ly, ry)
+         + sum_x(vx*2+1, tmx+1, trx, max(lx, tmx+1), rx, ly, ry);
+}
+void update_y(int vx, int lx, int rx, int vy, int ly, int ry, int x, int y, int new_val) {
+    if (ly == ry) {
+        if (lx == rx)
+            t[vx][vy] ^= 1;
+        else
+            t[vx][vy] = t[vx*2][vy] + t[vx*2+1][vy];
+    } else {
+        int my = (ly + ry) / 2;
+        if (y <= my)
+            update_y(vx, lx, rx, vy*2, ly, my, x, y, new_val);
+        else
+            update_y(vx, lx, rx, vy*2+1, my+1, ry, x, y, new_val);
+        t[vx][vy] = t[vx][vy*2] + t[vx][vy*2+1];
+    }
+}
+void update_x(int vx, int lx, int rx, int x, int y, int new_val) {
+    if (lx != rx) {
+        int mx = (lx + rx) / 2;
+        if (x <= mx)
+            update_x(vx*2, lx, mx, x, y, new_val);
+        else
+            update_x(vx*2+1, mx+1, rx, x, y, new_val);
+    }
+    update_y(vx, lx, rx, 1, 0, m-1, x, y, new_val);
 }
 int main() {
-    int n , q ;
-    while(scanf("%d",&n) == 1 && n != 0) {
-        int q ;
-        scanf("%d",&q) ;
-        dp[0] = 0 ;
-        for(int i = 1 ; i <= n ; i++) {
-            scanf("%d",&ar[i]) ;
-            dp[i] = 1 ;
-        }
-        for(int i = 2 ; i <= n ; i++) {
-            while(i <= n && ar[i] == ar[i - 1]) {
-                dp[i] = dp[i - 1] + 1 ;
-                i++ ;
-            }
-        }
-        Build(1 , 1 , n) ;
-        while(q--) {
-            int l , r ;
-            scanf("%d%d",&l , &r) ;
-
-            pair <int , int> ok = Query(1 , 1 , n , l , r) ;
-            int ans = ok.first ;
-            
-            if(ar[ok.second] == ar[l - 1]) {
-                ans = ok.second - (l - 1) ; 
-                if(ok.second < r) {
-                    ok = Query(1 , 1 , n , ok.second + 1 , r) ;
-                    ans = max(ans , ok.first) ;
-                }
-            }
-            printf("%d\n", ans) ;
-        }
-    }
-    return 0 ;
-}
-/*************** Segment tree considaring each segment a array*************/
-/* Given a string of len n and q queries with range l , r..you have to count
-the number of distinct charecters in a given range. and single Update possible*/
-
-#include <bits/stdc++.h>
-using namespace std ;
-
-#define fasterIO ios_base::sync_with_stdio(0);cin.tie(0); cout.tie(0) ;
-#define mxN 100000
-
-struct node {
-    bool ch[26] ;
-    node() {
-        for(int i = 0 ; i < 26 ; i++)
-            ch[i] = 0 ;
-    }
-} ;
-node segtree[mxN * 4] ;
-node temp , p ;
-string str ;
-
-void Build(int cur , int left , int right) {
-    if(left == right) {
-        segtree[cur].ch[str[left] - 'a'] = 1 ;
-        return  ;
-    }
-    int mid = (left + right) / 2 ;
-    Build(cur * 2 , left , mid) ;
-    Build(cur * 2 + 1 , mid + 1 , right) ;
-    for(int i = 0 ; i < 26 ; i++) {
-        segtree[cur].ch[i] = segtree[cur * 2].ch[i] | segtree[cur * 2 + 1].ch[i] ;
-    }
-    return ;
-}
-void Update(int cur , int left , int right , int pos , char val) {
-    if(pos > right || pos < left)
-        return ;
-    if(left == pos && right == pos) {
-        segtree[cur].ch[str[pos] - 'a'] = 0 ;
-        segtree[cur].ch[val - 'a'] = 1 ;
-        str[pos] = val ;
-        return ;
-    }
-    int mid = (left + right) / 2 ;
-    Update(cur * 2 , left , mid , pos , val) ;
-    Update(cur * 2 + 1 , mid + 1 , right , pos , val) ;
-    for(int i = 0 ; i < 26 ; i++)
-        segtree[cur].ch[i] = segtree[cur * 2 ].ch[i] | segtree[cur * 2 + 1].ch[i] ;
-    return ;
-}
-node *Query(int cur , int left , int right , int l , int r) {
-    if(l > right || r < left) 
-        return &temp ;
-    if(left >= l && right <= r)
-        return &segtree[cur] ;
-    int mid = (left + right) / 2 ;
-    node p1 = *Query(cur * 2 , left , mid , l , r) ;
-    node p2 = *Query(cur * 2 + 1 , mid + 1 , right , l , r) ;
-    for(int i = 0 ; i < 26 ; i++)
-        p.ch[i] = p1.ch[i] | p2.ch[i] ;
-    return &p ; 
-}
-int main() {
-    fasterIO
-    cin >> str ;
-    int n = str.size() ;
-    str = "0" + str ;
-    Build(1 , 1, n) ;
-    int q ; cin >> q ;
-    while(q--) {
-        int x ; cin >> x ;
-        if(x == 1) {
-            int pos ; char val ;
-            cin >> pos >> val ;
-            Update(1 , 1, n , pos , val) ;
-        } else if(x == 2) {
-            int l , r ;
-            cin >> l >> r ;
-            node ans = *Query(1 , 1, n, l , r) ;
-            int sum = 0 ; 
-            for(int i = 0 ; i < 26 ; i++) {
-                if(ans.ch[i])
-                    sum++; 
-                p.ch[i] = 0 ;
-            }
-            cout << sum << "\n" ;
-        }
-    }
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
     
-    return 0 ;
-}
-/*********************Segmentree Lazy Propagation**********************/
-
-/*.......................Range Update............................*/
-/* Given n elements and q queries , in each query update all value 
-in range l , r to val and return range sum in l , r */
-
-/* 1 based index */
-
-#include <bits/stdc++.h>
-using namespace std ;
-
-#define mxN 100000
-
-long long ar[mxN + 10] ;
-long long segtree[mxN * 4] ;
-long long lazy[mxN * 4] ;
-// simply building tree
-void Build(int cur , int left , int right) {
-    if(left == right) {
-        segtree[cur] = ar[left] ;
-        return ;
-    }
-    int mid = (left + right) / 2 ;
-    Build(cur * 2 , left , mid) ;
-    Build(cur * 2 + 1 , mid + 1 , right) ;
-    segtree[cur] = segtree[cur * 2] + segtree[cur * 2 + 1] ;
-    return ;
-}
-// Lazy update
-void Update(int cur , int left , int right , int l , int r , long long val) {
-    if(lazy[cur] != 0) {              // if lazy value is non zero then update
-        segtree[cur] += (right - left + 1) * lazy[cur] ;
-        if(left != right) {         // if this is not child
-            lazy[cur * 2] += lazy[cur] ;  // propagating its childs
-            lazy[cur * 2 + 1] += lazy[cur] ;
-        }
-        lazy[cur] = 0 ;           // cur node eluminate so reset 0
-    }
-    if (l > right || r < left)
-        return ;
-    if (left >= l && right <= r) {
-        segtree[cur] += (right - left + 1) * val ;
-        if(left != right) {
-            lazy[cur * 2] += val ;
-            lazy[cur * 2 + 1] += val ;
-        }
-        return ;
-    }
-    int mid = (left + right) / 2 ;
-    Update(cur * 2 , left , mid , l , r , val) ;
-    Update(cur * 2 + 1 , mid + 1 , right , l , r , val) ;
-    segtree[cur] = segtree[cur * 2] + segtree[cur * 2 + 1] ;
-    return ;
-}
-long long Query(int cur , int left , int right , int l , int r) {
-    if(l > right || r < left)
-        return 0 ;
-    if(lazy[cur] != 0) {
-        segtree[cur] += (right - left + 1) * lazy[cur] ;
-        if(left != right) {
-            lazy[cur * 2] += lazy[cur] ;
-            lazy[cur * 2 + 1] += lazy[cur] ;
-        }
-        lazy[cur] = 0 ;
-    }
-    if (left >= l && right <= r)
-        return segtree[cur] ;
-    int mid = (left + right) / 2 ;
-    long long p1 = Query(cur * 2 , left , mid , l , r) ;
-    long long p2 = Query(cur * 2 + 1 , mid + 1 , right , l , r) ;
-    return (p1 + p2) ;
-}
-int main() {
-    int tc ;
-    scanf("%d",&tc) ;
-    while(tc--) {
-        long long n , q ;
-        scanf("%lld%lld",&n,&q) ;
-        for(int i = 1 ; i <= n ; i++) {
-            scanf("%lld",&ar[i]) ;
-        }
-        for(int i = 0 ; i < 4 * mxN ; i++) {
-            lazy[i] = 0 ;
-            segtree[i] = 0 ;
-        }
-        Build(1 , 1 , n) ;
-        while(q--) {
-            int how ;
-            scanf("%d",&how) ;
-            if(how == 0) {
-                long long l , r , val ;
-                scanf("%lld%lld%lld",&l,&r,&val) ;
-                if(l > r)
-                    swap(l , r) ;
-                Update(1 , 1 , n , l , r , val) ;
-            } else if(how == 1) {
-                long long l ,  r ;
-                scanf("%lld%lld",&l,&r) ;
-                if(l > r)
-                    swap(l , r) ;
-                long long ans = Query(1 , 1 , n , l , r) ;
-                printf("%lld\n",ans) ;
-            }
+    int n, q; cin >> n >> q;
+    m = n;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            char ch; cin >> ch;
+            a[i][j] = (ch == '*')? 1 : 0;
         }
     }
-    return 0 ;
-}
-
-/* Segmentree range update and range sum lazy without propagation.. */
-
-#define mxN 100000
-long long ar[mxN + 10] ;
-struct {
-    long long sum , prop ;
-} segtree[4 * mxN] ;
-void Clear(int x) {
-    for(int i = 0 ; i < x ; i++) {
-        segtree[i].sum = 0 ;
-        segtree[i].prop = 0 ;
-        if(i < mxN)
-            ar[i] = 0 ;
-    }
-
-}
-void Build(int cur , int left , int right) {
-    if(left == right) {
-        segtree[cur].sum = ar[left] ;
-        segtree[cur].prop = 0 ;
-        return ;
-    }
-    int mid = (left + right) / 2 ;
-    Build(cur * 2 , left , mid) ;
-    Build(cur * 2 + 1 , mid + 1 , right) ;
-    segtree[cur].sum = segtree[cur * 2].sum + segtree[cur * 2 + 1].sum ;
-    segtree[cur].prop = 0 ;
-    return ;
-}   
-void Update(int cur , int left ,int right , int i , int j , long long val) {
-    if(i > right || j < left)
-        return ;
-    if(left >= i && right <= j) {
-        segtree[cur].sum += (right - left + 1) * val ;
-        segtree[cur].prop += val ;
-        return ;
-    }
-    int mid = (left + right) / 2 ;
-    Update(cur * 2 , left , mid , i , j , val) ;
-    Update(cur * 2 + 1 , mid + 1 , right , i , j , val) ;
-    segtree[cur].sum = segtree[cur * 2].sum + segtree[cur * 2 + 1].sum + (right - left + 1) * segtree[cur].prop ;
-    return ;    
-}
-long long Query(int cur , int left , int right , int i , int j , long long carry = 0) {
-    if(i > right || j < left) {
-        return 0 ;
-    }
-    if(left >= i && right <= j) {
-        return segtree[cur].sum + carry * (right - left + 1) ;
-    }
-    int mid = (left + right) / 2 ;
-    long long p1 = Query(cur * 2 , left , mid , i , j , carry + segtree[cur].prop) ;
-    long long p2 = Query(cur * 2 + 1 , mid + 1 , right , i , j , carry + segtree[cur].prop) ;
-    return p1 + p2 ;
-}
-int main() {
-    FasterIO
-    int tc ; cin >> tc ;
-    while(tc--) {
-        int n , c ; 
-        cin >> n >> c ;
-        Clear(4 * mxN) ;
-        Build(1 , 1 , n) ;
-        while(c--) {
-            int q  ;
-            cin >> q ;
-            if(q == 0) {
-                int i , j ;
-                if(i > j)
-                    swap(i , j) ;
-                long long val ;
-                cin >> i >> j >> val ;
-                Update(1 , 1 , n , i , j , val) ;
-            } else if(q == 1) {
-                int i , j ;
-                cin >> i >> j ;
-                if(i > j)
-                    swap(i , j) ;
-                long long ans = Query(1 , 1 , n , i , j) ;
-                cout << ans << "\n" ;
-            }
+    build_x(1 , 0 , m - 1);
+    while (q--) {
+        int typ; cin >> typ;
+        if (typ == 2) {
+            int y1, x1, y2, x2;
+            cin >> y1 >> x1 >> y2 >> x2;
+            y1--, x1--,y2--,x2--;
+            cout << sum_x(1 , 0 , m - 1, y1 , y2 , x1 , x2) << '\n';
+        } else {
+            int y, x; cin >> y >> x;
+            y--,x--;
+            update_x(1 , 0 , m - 1, y , x , 1);
         }
-    }        
-    return 0 ;  
+    }
+    return  0;
 }
