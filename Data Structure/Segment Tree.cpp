@@ -1,27 +1,53 @@
-/*********************************Segment Tree**************************************/
+#include <bits/stdc++.h>
+using namespace std;
 
-struct SegmentTree {
-    vector <long long> seg;
-    vector <long long> lazy;
-    vector <long long> ar;
+/*
+    1. constructor
+    2. init
+    3. build
+    4. take careod INF9 and INF18
+*/
+#define INF9         2147483647
+#define INF18        9223372036854775806
+template <typename T> struct SegmentTree {
+    vector <T> seg;
+    vector <T> lazy;
+    vector <T> ar;
+    int type , up;
+    SegmentTree() {
+        type = 0;
+        up = 0;
+    }
+    SegmentTree(int tp , int u) {
+        type = tp;
+        up = u;
+    }
     void Init(int N) {
         seg.assign(N << 2, 0);
         lazy.assign(N << 2 , 0);
     }
-    void Init(const vector <long long> &s) {
+    void Init(vector <T> &s) {
         Init(s.size() + 1);
         ar = s;
     }
     void PushDown(int cur , int left , int right) {
-        seg[cur] += (right - left + 1) * lazy[cur];
-        if (left != right) {        
-            lazy[cur << 1] += lazy[cur];  
-            lazy[cur << 1 | 1] += lazy[cur];
+        if (up == 1) seg[cur] += (right - left + 1) * lazy[cur];
+        else seg[cur] = (right - left + 1) * lazy[cur];
+        if (left != right) {
+            if (up == 1) {        
+                lazy[cur << 1] += lazy[cur];  
+                lazy[cur << 1 | 1] += lazy[cur];
+            } else {
+                lazy[cur << 1] = lazy[cur];  
+                lazy[cur << 1 | 1] = lazy[cur];
+            }
         }
         lazy[cur] = 0;
     }
-    long long Merge(long long x , long long y) {
-        return x + y;
+    T Merge(T x , T y) {
+        if (type == 0) return x + y;
+        if (type == 1) return max(x , y);
+        if (type == 2) return min(x , y);
     }
     void Build(int cur , int left , int right) {
         lazy[cur] = 0;
@@ -34,14 +60,15 @@ struct SegmentTree {
         Build(cur << 1 | 1 , mid + 1 , right);
         seg[cur] = Merge(seg[cur << 1] , seg[cur << 1 | 1]);
     }
-    void Update(int cur , int left , int right , int pos , long long val) {
+    void Update(int cur , int left , int right , int pos , T val) {
         Update(cur , left , right , pos , pos , val);
     }
-    void Update(int cur , int left , int right , int l , int r , long long val) {
+    void Update(int cur , int left , int right , int l , int r , T val) {
         if (lazy[cur] != 0) PushDown(cur , left , right);         
         if (l > right || r < left) return;
         if (left >= l && right <= r) {
-            lazy[cur] = val;
+            if (up == 0) lazy[cur] = val;
+            else lazy[cur] += val;
             PushDown(cur , left , right);
             return ;
         }
@@ -50,16 +77,22 @@ struct SegmentTree {
         Update(cur << 1 | 1 , mid + 1 , right , l , r , val);
         seg[cur] = Merge(seg[cur << 1] , seg[cur << 1 | 1]);
     }
-    long long Query(int cur , int left , int right , int l , int r) {
-        if (l > right || r < left) return 0;
+    T Query(int cur , int left , int right , int l , int r) {
+        if (l > right || r < left) {
+            if (type == 0) return 0;
+            if (type == 1) return -INF18;
+            if (type == 2) return INF18;
+        }
         if (lazy[cur] != 0) PushDown(cur , left , right);
         if (left >= l && right <= r) return seg[cur];
         int mid = (left + right) >> 1;
-        long long p1 = Query(cur << 1 , left , mid , l , r);
-        long long p2 = Query(cur << 1 | 1 , mid + 1 , right , l , r);
+        T p1 = Query(cur << 1 , left , mid , l , r);
+        T p2 = Query(cur << 1 | 1 , mid + 1 , right , l , r);
         return Merge(p1 , p2);
     }
-} T;
+};
+//for sum = 0, max = 1, min = 2, for assignment update send 0 or 1 for increment.
+SegmentTree <long long> tr(0 , 0);
 
 /*...........................Range Sum Query(Update Single)............................*/
 /* Given an array of length N , and Query the sum in range left , right..Array can be update in a particular 
