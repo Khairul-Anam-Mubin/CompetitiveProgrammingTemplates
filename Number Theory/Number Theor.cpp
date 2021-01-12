@@ -1,3 +1,52 @@
+struct PrimeNumberTheory {
+    int N;
+    vector <bool> isp;
+    vector <int> pl;
+    PrimeNumberTheory(int n) {
+        Init(n);
+    }
+    PrimeNumberTheory() {
+        N = 0;
+    }
+    void Init(int n) {
+        N = n;
+        isp.assign(N + 1, 0);
+        pl.clear();
+        Sieve();
+    }
+    // Precalculation : O(NloglogN)
+    void Sieve() {
+        isp[0] = isp[1] = 1;
+        for (int i = 4; i <= N; i += 2) isp[i] = 1;
+        for (int i = 3; i * i <= N; i += 2) {
+            if (!isp[i]) {
+                for (int j = i * i; j <= N; j += i + i) {
+                    isp[j] = 1;
+                }
+            }
+        }
+        pl.push_back(2);
+        for (int i = 3; i <= N; i += 2) {
+            if (!isp[i]) {
+                pl.push_back(i);
+            }
+        }
+    }
+    // if N > 1e7 : O(sqrt(N))
+    // else : O(1)
+    bool IsPrime(int n) {
+        if (pl.size() != 0 && n <= N) return isp[n];
+        if(n == 0 || n == 1) return 0;
+        if(n == 2) return 1;
+        if(n % 2 == 0) return 0 ;
+        for(int i = 3 ; i * i <= n ; i += 2) {
+            if(n % i == 0) { 
+                return 0;
+            }
+        }
+        return 1;
+    }
+} pr(15000000);
 // Number Theory 
 // Sieve of eratosthenes(Generating Prime), Prime Factorization
 // Eular Totient(Phi) / Number of co-prime of a Numebr 
