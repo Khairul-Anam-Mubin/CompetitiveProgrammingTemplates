@@ -31,8 +31,13 @@ template <typename T> struct SegmentTree {
         ar = s;
     }
     void PushDown(int cur , int left , int right) {
-        if (up == 1) seg[cur] += (right - left + 1) * lazy[cur];
-        else seg[cur] = (right - left + 1) * lazy[cur];
+        if (type == 0) {
+            if (up == 1) seg[cur] += (right - left + 1) * lazy[cur];
+            else seg[cur] = (right - left + 1) * lazy[cur];
+        } else {
+            if (up == 1) seg[cur] += lazy[cur];
+            else seg[cur] = lazy[cur];
+        }
         if (left != right) {
             if (up == 1) {        
                 lazy[cur << 1] += lazy[cur];  
