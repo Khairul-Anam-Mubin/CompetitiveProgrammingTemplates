@@ -1,7 +1,14 @@
-template<typename T, bool maximum_mode = false>
+template<typename T>
 struct RMQ {
     int n = 0;
+    bool maximum_mode = 0;
     vector<vector<T>> sptab;
+    RMQ() {
+        maximum_node = 0;
+    }
+    RMQ(bool _i) {
+        maximum_node = _i;
+    }
     static int Largest_Bit(int x) {
         return 31 - __builtin_clz(x);
     }
