@@ -13,15 +13,11 @@ void merge(int ar[] , int left ,int mid , int right) {
         Rarr[j] = ar[mid + j + 1] ;
     i = 0 , j = 0 , k = left ;
     while (i < leftsize && j < rightsize) {
-        if( Larr[i] <= Rarr[j])
-            ar[k++] = Larr[i++] ;
-        else
-            ar[k++] = Rarr[j++] ;
+        if( Larr[i] <= Rarr[j]) ar[k++] = Larr[i++] ;
+        else ar[k++] = Rarr[j++] ;
     }
-    while(i < leftsize)
-        ar[k++] = Larr[i++] ;
-    while(j < rightsize)
-        ar[k++] = Rarr[j++] ;
+    while(i < leftsize) ar[k++] = Larr[i++] ;
+    while(j < rightsize) ar[k++] = Rarr[j++] ;
 }
 void SORT(int ar[] , int left , int right) {
     if( left < right ) {
