@@ -1,73 +1,167 @@
-struct PrimeNumberTheory {
-    int N;
-    vector <bool> isp;
-    vector <int> pl;
-    PrimeNumberTheory(int n) {
-        Init(n);
-    }
-    PrimeNumberTheory() {
-        N = 0;
-    }
-    void Init(int n) {
-        N = n;
-        isp.assign(N + 1, 0);
-        pl.clear();
-        Sieve();
-    }
-    // Precalculation : O(NloglogN)
-    void Sieve() {
-        isp[0] = isp[1] = 1;
-        for (int i = 4; i <= N; i += 2) isp[i] = 1;
-        for (int i = 3; i * i <= N; i += 2) {
-            if (!isp[i]) {
-                for (int j = i * i; j <= N; j += i + i) {
-                    isp[j] = 1;
-                }
-            }
-        }
-        pl.push_back(2);
-        for (int i = 3; i <= N; i += 2) {
-            if (!isp[i]) {
-                pl.push_back(i);
-            }
-        }
-    }
-    // if N > 1e7 : O(sqrt(N))
-    // else : O(1)
-    bool IsPrime(int n) {
-        if (pl.size() != 0 && n <= N) return isp[n];
-        if(n == 0 || n == 1) return 0;
-        if(n == 2) return 1;
-        if(n % 2 == 0) return 0 ;
-        for(int i = 3 ; i * i <= n ; i += 2) {
-            if(n % i == 0) { 
-                return 0;
-            }
-        }
-        return 1;
-    }
-} pr(15000000);
-// Number Theory 
-// Sieve of eratosthenes(Generating Prime), Prime Factorization
-// Eular Totient(Phi) / Number of co-prime of a Numebr 
-// Sum of all co-primes of a number 
+#include <bits/stdc++.h>
+using namespace std;
 
-#define mx 50000
-bool isp[mx+10];
-vector <int> prime;
+/******************************** Number Theory (Prime and Prime Factorisation) *****************************/
+/*
+    1. Always set mxN
+    2. Always Call once Sieve() from main function
+    3. if nod or sod needed, call once SieveOfDivisors() from main
+    4. if Eulers phi needed, call once SieveOfEulersPhi() from main
+    5. now after initialization/build calls that you need, you can use IsPrime(n) , Nod(n), Sod(n), Phi(n)
+*/
+const long long mxN = 1e7;      // maximum value to precomputation, the most preferable mxN <= 1e7
+bool isp[mxN + 1];              // marking primes <= mxN. if isp[i] = 0, then i is prime, else it's composite 
+long long prime[mxN + 1];       // storing all primes <= mxN
+long long tot_primes = 0;       // total number of primes generating through sieve
+long long nod[mxN + 1];         // store nod <= mxN
+long long sod[mxN + 1];         // store sod <= mxN
+long long phi[mxN + 1];         // store phi <= mxN
+long long pf_list[100];         // it can be proven that total number of prime factors always will be less then 100 
+long long tot_pf = 0;           // total number of prime factors of a number
 
-//sieve function for pre-calculate the primes..
-void sieve(){
-    for(int i = 4 ; i <= mx ; i += 2)
-        isp[i] = true;
-    for(int i = 3 ; i*i <= mx ; i += 2)
-        if(!isp[i])
-            for(int j = i*i ; j <= mx ; j +=(i+i))
-                isp[j] = true;
-    prime.pb(2);
-    for(int i = 3 ; i <= mx ; i += 2)
-        if(!isp[i])
-            prime.pb(i);
+// Build Complexity : O(NloglogN) (Much faster Sieve)
+void Sieve() {
+    for (int i = 0; i <= mxN; i++) isp[i] = 0;            
+    for (int i = 4; i <= mxN; i += 2) isp[i] = 1;         
+    isp[0] = isp[1] = 1;                                  
+    for (long long i = 3; i * i <= mxN; i += 2) {               
+        if (isp[i] == 0) {                                
+            for (long long j = i * i; j <= mxN; j += i + i) {   
+                isp[j] = 1;                               
+            }
+        }
+    }
+    prime[tot_primes++] = 2;                               
+    for (int i = 3; i <= mxN; i += 2) {
+        if (isp[i] == 0) prime[tot_primes++] = i;
+    }
+}
+// if n <= mxN, always query in O(1)
+// else per query O(sqrtN)
+// return 0 if prime, else return 1
+bool IsPrime(long long n) {
+    if (n <= mxN) return isp[n];
+    if (n % 2 == 0) return 1;
+    for (int i = 0; i < tot_primes; i++) {
+        long long x = prime[i];
+        if (x * x > n) return 0;
+        if (n % x == 0) return 1;
+    }
+    return 0;
+}
+// if n <= mxN, works O(logN) per query
+// if n >= mxN, most often works with O(logN) per query but sometimes goes O(sqrtN) in very rare.
+// pf_list stores the prime factors and tot_pf is the number of prime factors of n
+// example: n = 12 , the pf_list contains 2 , 2 , 3 and tot_pf = 3
+void PrimeFactorization(long long n) {
+    tot_pf = 0;
+    for (int i = 0; i < tot_primes; i++) {
+        long long x = prime[i];
+        if (x * x > n) break;
+        if (n <= mxN && isp[n] == 0) break;
+        while (n % x == 0) {
+            n /= x;
+            pf_list[tot_pf++] = x;
+        }
+    }
+    if (n != 1) pf_list[tot_pf++] = n;
+}
+// Build Complexity : O(NlogN)
+void SieveOfDivisors() {
+    for (int i = 0; i <= mxN; i++) {
+        nod[i] = 0;
+        sod[i] = 0;
+    }
+    for (int i = 1; i <= mxN; i++) {
+        for (int j = i; j <= mxN; j += i) {
+            nod[j] += 1;
+            sod[j] += i;
+        }
+    }
+}
+// if n <= 1e7, always works with O(1) per query
+// if n >= 1e7, most often works with O(logN) per query but sometimes goes O(sqrtN) in very rare.
+int Nod(int n) {
+    if (n <= mxN) return nod[n];
+    int ans = 1;
+    for (int i = 0; i < tot_primes; i++) {
+        if (n <= mxN && isp[n] == 0) break;
+        int x = prime[i];
+        if (x * x > n) break; 
+        if (n % x == 0) {
+            int cnt = 1;
+            while (n % x == 0) {
+                n /= x;
+                cnt += 1;
+            }
+            ans *= cnt;
+        }
+    }
+    if (n != 1) ans *= 2;
+    return ans;
+}
+// if n <= 1e7, always works with O(1) per query
+// if n >= 1e7, most often works with O(logN) per query but sometimes goes O(sqrtN) in very rare.
+long long Sod(long long n) {
+    if (n <= mxN) return sod[n];
+    long long ans = 1;
+    for (int i = 0; i < tot_primes; i++) {
+        if (n <= mxN && isp[n] == 0) break;
+        long long x = prime[i];
+        if (x * x > n) break;
+        if (n % x == 0) {
+            long long tmpsum = 1, p = 1;
+            while (n % x == 0) {
+                n /= x;
+                p *= x;
+                tmpsum += p;
+            }
+            ans *= tmpsum;
+        }
+    }
+    if (n != 1) ans *= (n + 1LL);
+    return ans;
+}
+// Build Complexity : O(NlogN)
+void SieveOfEulersPhi() {
+    for (int i = 0; i <= mxN; i++) phi[i] = 0;
+    phi[1] = 1;
+    for (int i = 2; i <= mxN; i++) {
+        if (phi[i] == 0) {
+            phi[i] = i - 1;
+            for (int j = i + i; j <= mxN; j += i) {
+                if (phi[j] == 0) phi[j] = j;
+                phi[j] -= phi[j] / i;
+            } 
+        }
+    }
+}
+// if n <= 1e7, always works with O(1) per query
+// if n >= 1e7, most often works with O(logN) per query but sometimes goes O(sqrtN) in very rare.
+long long Phi(long long n) {
+    if (n <= mxN) return phi[n];
+    long long coprime = n;
+    for (int i = 0; i < tot_primes; i++) {
+        if (n <= mxN && isp[n] == 0) break;
+        long long x = prime[i];
+        if (x * x > n) break;
+        if (n % x == 0) {
+            while (n % x == 0) n /= x;
+            coprime -= coprime / x;
+        }
+    }
+    if (n != 1) coprime -= coprime / n;
+    return coprime;
+}
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    
+    Sieve();
+    long long n; cin >> n;
+    cout << IsPrime(n) << "\n";
+    return 0;
 }
 
 // SubLinearSieve
@@ -87,52 +181,6 @@ void LinearSieve() {
     }
 }
 
-// returning sum of divisors of N
-// complexity of optimized prime factorization..
-int SOD( int n ) {
-    int res = 1;
-    int sqrtn = sqrt ( n );
-    for ( int i = 0; i < prime.size() && prime[i] <= sqrtn; i++ ) {
-        if ( n % prime[i] == 0 ) {
-            int tempSum = 1; // Contains value of (p^0+p^1+...p^a)
-            int p = 1;
-            while ( n % prime[i] == 0 ) {
-                n /= prime[i];
-                p *= prime[i];
-                tempSum += p;
-            }
-            sqrtn = sqrt ( n );
-            res *= tempSum;
-        }
-    }
-    if ( n != 1 ) {
-        res *= ( n + 1 ); // Need to multiply (p^0+p^1)
-    }
-    return res;
-}
-
-// returning number of divisors of N
-// Complexity of oprimized prime factorization
-int NOD ( int n ) {
-    int sqrtn = sqrt ( n );
-    int res = 1;
-    for ( int i = 0; i < prime.size() && prime[i] <= sqrtn; i++ ) {
-        if ( n % prime[i] == 0 ) {
-            int p = 0; // Counter for power of prime
-            while ( n % prime[i] == 0 ) {
-                n /= prime[i];
-                p++;
-            }
-            sqrtn = sqrt ( n );
-            p++; // Increase it by one at end
-            res *= p; // Multiply with answer
-        }
-    }
-    if ( n != 1 ) {
-        res *= 2; // Remaining prime has power p^1. So multiply with 2/
-    }
-    return res;
-}
 
 // Sum of Number of divisors in range 1 to N .
 // Complexity O(sqrt(N))
@@ -147,42 +195,6 @@ int SNOD( int n ) {
     return res;
 }
 
-// Pre calculation sieve method..
-// complexity of sieve..
-#define mx 50000
-int phi[mx + 10] ;
-void PreCalPhi() {
-    phi[1] = 1 ;
-    for(int i = 2 ; i <= mx ; i++) {
-        if(phi[i] == 0) {
-            phi[i] = i - 1 ;
-            for(int j = i + i ; j <= mx ; j += i) {
-                if(phi[j] == 0) 
-                    phi[j] = j ;
-                phi[j] = phi[j] - (phi[j] / i) ;
-            }
-        }
-    }
-}
-
-// returns the number of co-prime of a number
-int phi(int n){
-    //Assigning n is as it's co-prime
-    int coprime = n ;
-    int sz = prime.size();
-    
-    //This is the prime factorization part
-    for(int  i = 0 ; i < sz && Sqr(prime[i]) <= n ; i++){
-        if(n % prime[i] == 0){
-            while(n % prime[i] == 0)
-                n /= prime[i];
-            coprime -= (coprime / prime[i]);
-        }
-    }
-    if( n > 1)
-        coprime -= (coprime / n);
-    return coprime;
-}
 // sum of coprimes of n
 int sumofcoprimesN(int n){
     int x = phi(n);
