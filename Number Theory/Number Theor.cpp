@@ -18,7 +18,7 @@ long long sod[mxN + 1];         // store sod <= mxN
 long long phi[mxN + 1];         // store phi <= mxN
 long long pf_list[100];         // it can be proven that total number of prime factors always will be less then 100 
 long long tot_pf = 0;           // total number of prime factors of a number
-
+vector <pair <long long , long long>> FF; // stores factorial factorization as p ^ a
 // Build Complexity : O(NloglogN) (Much faster Sieve)
 void Sieve() {
     for (int i = 0; i <= mxN; i++) isp[i] = 0;            
@@ -153,6 +153,21 @@ long long Phi(long long n) {
     if (n != 1) coprime -= coprime / n;
     return coprime;
 }
+// Works in O(NlogN) and N <= mxN
+// FF contains the Factorization
+void FactorialFactorization(long long n) {
+    FF.clear();
+    for (int i = 0; i < tot_primes; i++) {
+        if (prime[i] > n) break;
+        long long x = n;
+        long long frq = 0;
+        while (x / prime[i]) {
+            frq += x / prime[i];
+            x /= prime[i];
+        }
+        FF.push_back({prime[i] , frq});
+    }
+}
 int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
@@ -160,7 +175,10 @@ int main() {
     
     Sieve();
     long long n; cin >> n;
-    cout << IsPrime(n) << "\n";
+    FactorialFactorization(n);
+    for (int i = 0; i < FF.size(); i++) {
+        cout << FF[i].first << "^" << FF[i].second << "\n";
+    }
     return 0;
 }
 
