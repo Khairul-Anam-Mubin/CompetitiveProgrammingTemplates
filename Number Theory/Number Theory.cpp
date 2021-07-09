@@ -181,7 +181,7 @@ int main() {
     }
     return 0;
 }
-
+/*******************************Basic Templates End***********************************/
 // SubLinearSieve
 // o(n) complexity
 const int N = 10000000;
