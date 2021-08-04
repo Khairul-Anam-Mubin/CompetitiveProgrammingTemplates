@@ -1,5 +1,6 @@
 /*************************Disjoint Set Union Find**************************/
-
+// 1. assign max size with constructor
+// 2. each test case call makeset
 struct DSU {
     vector <int> parent;
     vector <int> siz;

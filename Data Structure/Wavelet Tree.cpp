@@ -1,6 +1,6 @@
+/***********************Wavelet Tree**************************/
 #include <bits/stdc++.h>
 using namespace std;
-
 // 1 based index...
 const int N = 3e5, M = N;
 const int MAX = 1e6; 

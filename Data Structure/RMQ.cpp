@@ -1,3 +1,4 @@
+/*************************RMQ*************************/
 template<typename T>
 struct RMQ {
     int n = 0;

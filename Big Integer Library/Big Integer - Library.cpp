@@ -1,3 +1,4 @@
+/******************Big Integer Library*********************/
 // header files
 #include <cstdio>
 #include <string>
@@ -9,7 +10,6 @@ struct Bigint {
     // representations and structures
     string a; // to store the digits
     int sign; // sign = -1 for negative numbers, sign = 1 otherwise
-    
     // constructors
     Bigint() {} // default constructor
     Bigint( string b ) { (*this) = b; } // constructor for string
@@ -27,14 +27,12 @@ struct Bigint {
         sign = ( a.size() == 1 && a[0] == '0' ) ? 1 : newSign;
         return (*this);
     }
-
     // assignment operator
     void operator = ( string b ) { // assigns a string to Bigint
         a = b[0] == '-' ? b.substr(1) : b;
         reverse( a.begin(), a.end() );
         this->normalize( b[0] == '-' ? -1 : 1 );
     }
-
     // conditional operators
     bool operator < ( const Bigint &b ) const { // less than operator
         if( sign != b.sign ) return sign < b.sign;
@@ -101,7 +99,6 @@ struct Bigint {
         }
         return c.normalize(sign);
     }
-
     // output method
     void print() {
         if( sign == -1 ) putchar('-');

@@ -1,10 +1,22 @@
-
+/**************************HeavyLightDecomposition***********************/
+/*  1.  All nodes are number from 0 to n - 1  */ 
+/*  2.  Assign the graph by Init(graph) or simply Init(total nodes) and 
+        call AddEdge(u , v) for all the edges */
+/*  3.  Must be Take the node value from input directly or use the 
+        TakeNodeVal(nodeval) to assigning the node value */
+/*  4.  Call Build() to construct hld and segment tree */
+/*  5.  simply use the path query by query(u , v) and update(pos , val) 
+/*
+/*  6. use optimized segment tree sometimes it cz TLE
+/**********************Segment tree**************************************/
 /*
     1. constructor
     2. init
     3. build
     4. take careod INF9 and INF18
 */
+#define INF9         2147483647
+#define INF18        9223372036854775806
 template <typename T> struct SegmentTree {
     vector <T> seg;
     vector <T> lazy;
@@ -94,17 +106,6 @@ template <typename T> struct SegmentTree {
 };
 //for sum = 0, max = 1, min = 2, for assignment update send 0 or 1 for increment.
 SegmentTree <long long> T(0 , 0);
-
-
-/**************************HeavyLightDecomposition***********************/
-/*  1.  All nodes are number from 0 to n - 1  */ 
-/*  2.  Assign the graph by Init(graph) or simply Init(total nodes) and 
-        call AddEdge(u , v) for all the edges */
-/*  3.  Must be Take the node value from input directly or use the 
-        TakeNodeVal(nodeval) to assigning the node value */
-/*  4.  Call Build() to construct hld and segment tree */
-/*  5.  simply use the path query by query(u , v) and update(pos , val) */
-
 struct HeavyLightDecompose {
     vector <vector <int> > g ; // graph
     vector <long long> node_val;
@@ -206,35 +207,3 @@ struct HeavyLightDecompose {
         return ans;
     }
 } hd;
-int main() {
-    FasterIO
-    Test {
-        int n; cin >> n;
-        hd.Init(n);
-        vector <long long> pos;
-        for (int i = 0; i < n; i++) {
-            ll x; cin >> x;
-            pos.PB(x);
-        }
-        hd.TakeNodeVal(pos);
-        for (int i = 0; i < n - 1; i++) {
-            int u , v; cin >> u >> v;
-            hd.AddEdge(u , v);
-        }
-        hd.Build();
-        int q; cin >> q;
-        cout << "Case " << tc << ":\n";
-        while (q--) {
-            int x; cin >> x;
-            if (x == 0) {
-                int u , v; cin >> u >> v;
-                cout << hd.Query(u , v) << "\n";
-            } else if (x == 1) {
-                int node , val;
-                cin >> node >> val;
-                hd.Update(node , val);
-            }
-        }
-    }
-    return 0;
-}

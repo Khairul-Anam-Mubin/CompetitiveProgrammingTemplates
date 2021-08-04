@@ -48,31 +48,6 @@ void ClearMemory(node *cur) {
             ClearMemory(cur->next[i]) ;
     delete(cur) ;
 }
-int main() {
-    cout << "Enter how many words you want to insert in the trie : " ;
-    int n ; cin >> n ;
-    cout << "Enter the word's...\n\n" ;
-    for(int i = 0 ; i < n ; i++) {
-        string str ;
-        cin >> str ;
-        int len = str.size() ;
-        Insert(str , len) ;
-    }
-    cout << "\n\nEnter the query number : " ;
-    int query ; cin >> query ;
-    while(query--) {
-        cout << "\nEnter the string you want to search : " ;
-        string str ;
-        cin >> str ;
-        int len = str.size() ;
-        if( Search(str , len) )
-            cout << str << " Found !!!" << "\n\n" ;
-        else
-            cout << str << "Not Found!!!\n\n" ;
-    }
-    ClearMemory(root) ; // Freeing up the memory's ;
-    return 0 ;
-}
 
 /*...........................Trie String matching............................*/
 /* Given A Text string , and N Query , in each query one string str given, checking if the query 
