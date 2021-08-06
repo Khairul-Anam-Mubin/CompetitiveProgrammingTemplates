@@ -1,23 +1,13 @@
-// Complexity O(n + m)
-
-#include <bits/stdc++.h>
-using namespace std ;
-
 // Building Prefix array
 vector <int> BuildPrefixArray(string pattern) {
     vector <int> pfix(pattern.length()) ;
     pfix[0] = 0 ;
     for(int i = 1 ,j = 0 ; i < pattern.length() ; ) {
-        if(pattern[i] == pattern[j]) {
+        if(pattern[i] == pattern[j])
             pfix[i++] = ++j ;
-        }
         else {
-            if(j == 0) {
-                pfix[i++] = 0 ;
-            }
-            else {
-                j = pfix[j - 1] ;
-            }
+            if(j == 0) pfix[i++] = 0 ;
+            else j = pfix[j - 1] ;
         }
     }
     return pfix ;
@@ -31,12 +21,8 @@ int Kmp(string text , string pattern) {
             j++ ;
         }
         else {
-            if(j == 0) {
-                i++ ;
-            }
-            else {
-                j = pfix[j - 1] ;
-            }
+            if(j == 0) i++ ;
+            else j = pfix[j - 1] ;
         }
         if(j == (int)pattern.length()) {
             cnt++ ; // Number of occurances..
@@ -44,13 +30,6 @@ int Kmp(string text , string pattern) {
         }
     }
     return cnt ;
-}
-int main() {
-    string text , pattern ;
-    cin >> pattern ;
-    cin >> text ;
-    cout << Kmp(text , pattern) << "\n" ; ;
-    return 0 ;
 }
 
 Here we discuss two problems at once. 

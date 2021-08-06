@@ -15,9 +15,7 @@ struct RMQ {
         n = int(values.size());
         int levels = Largest_Bit(n) + 1;
         sptab.resize(levels);
-        for (int k = 0; k < levels; k++) {
-            sptab[k].resize(n - (1 << k) + 1);
-        }
+        for (int k = 0; k < levels; k++) sptab[k].resize(n - (1 << k) + 1);
         if (n > 0) sptab[0] = values;
         for (int k = 1; k < levels; k++) {
             for (int i = 0; i <= n - (1 << k); i++) {
@@ -54,48 +52,32 @@ struct SuffixArray{
     }
     void BuildSuffixArray() {
         vector <pair<char,int>> a(n);
-        for (int i = 0; i < n; i++) {
-            a[i] = {s[i] , i};
-        }
+        for (int i = 0; i < n; i++) a[i] = {s[i] , i};
         sort(a.begin() , a.end());
-        for (int i = 0; i < n; i++) {
-            sar[i] = a[i].second;
-        }
+        for (int i = 0; i < n; i++) sar[i] = a[i].second;
         rank[sar[0]] = 0;
         for (int i = 1; i < n; i++) {
             rank[sar[i]] = rank[sar[i - 1]];
-            if (a[i].first != a[i - 1].first) {
-                rank[sar[i]]++;
-            }
+            if (a[i].first != a[i - 1].first) rank[sar[i]]++;
         }
         for (int k = 0; (1 << k) < n; k++) {
             vector <pair<pair<int , int>, int>> a(n);
-            for (int i = 0; i < n; i++) {
-                a[i] = {{rank[i] , rank[(i + (1 << k)) % n]} , i};
-            }
+            for (int i = 0; i < n; i++) a[i] = {{rank[i] , rank[(i + (1 << k)) % n]} , i};
             Radix_Sort(a);
-            for (int i = 0; i < n; i++) {
-                sar[i] = a[i].second;
-            }
+            for (int i = 0; i < n; i++) sar[i] = a[i].second;
             rank[sar[0]] = 0;
             for (int i = 1; i < n; i++) {
                 rank[sar[i]] = rank[sar[i - 1]];
-                if (a[i].first != a[i - 1].first) { 
-                    rank[sar[i]]++;
-                }
+                if (a[i].first != a[i - 1].first) rank[sar[i]]++;
             }
         }
     }
     void Radix_Sort(vector <pair<pair<int , int>, int>> &a) {
         vector <int> cnt(n, 0) , pos(n);
         vector <pair<pair<int , int> , int>> a_new(n);
-        for (auto it: a) {
-            cnt[it.first.second]++;
-        }
+        for (auto it: a) cnt[it.first.second]++;
         pos[0] = 0;
-        for (int i = 1; i < n; i++) {
-            pos[i] = pos[i - 1] + cnt[i - 1];
-        }
+        for (int i = 1; i < n; i++) pos[i] = pos[i - 1] + cnt[i - 1];
         for (auto it : a) {
             int i = it.first.second;
             a_new[pos[i]] = it;
@@ -103,13 +85,9 @@ struct SuffixArray{
         }
         a.swap(a_new);
         cnt.assign(n , 0);
-        for (auto it: a) {
-            cnt[it.first.first]++;
-        }
+        for (auto it: a) cnt[it.first.first]++;
         pos[0] = 0;
-        for (int i = 1; i < n; i++) {
-            pos[i] = pos[i - 1] + cnt[i - 1];
-        }
+        for (int i = 1; i < n; i++) pos[i] = pos[i - 1] + cnt[i - 1];
         for (auto it : a) {
             int i = it.first.first;
             a_new[pos[i]] = it;
@@ -160,20 +138,15 @@ struct SuffixArray{
     // Binary search Complexity O(logN)
     long long NumOfUniqueSubStr() {
         long long sum = 0;
-        for (int i = 0; i < lcp.size(); i++) {
-            sum += lcp[i];
-        }
+        for (int i = 0; i < lcp.size(); i++) sum += lcp[i];
+        
         long long sz = ((n - 1) * n) / 2;
         return sz - sum;
     }
     bool IsSubstr(string &t) {  
-        if ((int)t.size() > (int)s.size()) {
-            return false;
-        }
+        if ((int)t.size() > (int)s.size()) return false;
         int low = Lower_Bound(t);
-        if (s.substr(sar[low] , min(int(t.size()) , n)) == t) { 
-            return true;
-        }
+        if (s.substr(sar[low] , min(int(t.size()) , n)) == t) return true;
         return false;
     }
     int Lower_Bound(string &t) {
@@ -200,9 +173,7 @@ struct SuffixArray{
     }
     int SubstrOccurences(string &t) {
         int low = Lower_Bound(t) , up = Upper_Bound(t);
-        if (low == up || s.substr(sar[low] , min(int(t.size()) , n)) != t) {
-            return 0;
-        }
+        if (low == up || s.substr(sar[low] , min(int(t.size()) , n)) != t) return 0;
         return (up - low);
     }
     string LCS(string &a, string &b) {
@@ -211,11 +182,8 @@ struct SuffixArray{
         int tot = sar.size();
         bool color[tot];
         for (int i = 0; i < tot; i++) {
-            if (sar[i] < alen) {
-                color[i] = 1;
-            } else {
-                color[i] = 0;
-            }
+            if (sar[i] < alen) color[i] = 1;
+            else color[i] = 0;
         }
         int mx = -1 , mxid = -1;
         for (int i = 1; i < tot; i++) {
@@ -224,9 +192,7 @@ struct SuffixArray{
                 mxid = sar[i];
             }
         }
-        if (mxid != -1) {
-            return s.substr(mxid , mx);
-        }
+        if (mxid != -1) return s.substr(mxid , mx);
         return "";
     }
 };

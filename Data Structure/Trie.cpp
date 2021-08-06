@@ -8,40 +8,34 @@ or not */
 using namespace std ;
 struct node{
     bool endmark ; 
-    node *next[27] ;  // these are connecting edge
-    // Constructor for initialise all endmark  false initially and assigning all edges as NULL
+    node *next[27] ;
     node() {
         endmark = false ;
         for(int i = 0 ; i < 26 ; i++)
             next[i] = NULL ;
     }
 };
-node *root = new node() ; //Its the root where we are going to always start
-//Insert operation in Trie..
-//Insert in O(n)
+node *root = new node() ; 
 void Insert(string str , int len) {
     node *curr = root ;
     for(int i = 0 ; i < len ; i++ ) {
         int id = str[i] - 'a' ;
         if(curr->next[id] == NULL)
-            curr->next[id] = new node() ; // Every time new node creating
+            curr->next[id] = new node() ;
         curr = curr->next[id] ;
     }
-    curr->endmark = true ; // setting the endmark true after ending inserting
+    curr->endmark = true ; 
 }
-// Searching the string if its present in the Tri..
-// searchin in O(n)
 bool Search(string str , int len) {
     node *curr = root ;
     for(int i = 0 ; i < len ; i++) {
         int id = str[i] - 'a' ;
         if(curr->next[id] == NULL)
-            return false ;  // there is no such a letter present in the Trie as edge
+            return false ; 
         curr = curr->next[id] ;
     }
-    return curr->endmark ; // if string present then  return true
+    return curr->endmark ;
 }
-// To free up all the memory
 void ClearMemory(node *cur) {
     for(int i = 0 ; i < 26 ; i++)
         if(cur->next[i])
