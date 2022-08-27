@@ -97,6 +97,7 @@ struct SuffixArray{
     }
     // algorithm of Kasai, Arimura, Arikawa, Lee and Park.
     // Complexity O(n)
+    // Longest Common prefix
     void BuildLCPArray() {
         int k = 0;
         for (int i = 0; i < n - 1; i++) {
@@ -176,6 +177,7 @@ struct SuffixArray{
         if (low == up || s.substr(sar[low] , min(int(t.size()) , n)) != t) return 0;
         return (up - low);
     }
+    // Longest common substring of two string
     string LCS(string &a, string &b) {
         int alen = a.size();
         Init(a + "&" + b);
